@@ -80,7 +80,9 @@ b_y    = np.arange(0.,1.,0.1)
 framer = rt.TH2F('','',len(b_pt)-1,b_pt,len(b_y)-1,b_y)
 framer.GetYaxis().SetRangeUser(0.25, 1.0)
 framer.GetXaxis().SetRangeUser(1, 505)
-framer.SetTitle(';electron p_{T} [GeV]; Efficiency')
+framer.GetXaxis().SetMoreLogLabels()
+framer.GetXaxis().SetNoExponent()
+framer.SetTitle(';p_{T} [GeV]; Efficiency')
 #####################################################################################################
 
 #####################################################################################################
@@ -182,9 +184,30 @@ eleIDs=['passingCharge',
         'passingVeto94X',
         'passingVeto94XV2',]
 #####################################################################################################
+muonIDs = [# 'isTightMuon' # FIXME not there?!
+           'Glb',
+           'GlbPT',
+           'Medium',
+           # 'Medium2016',
+           'PF',
+           'Tight2012',
+           'Loose',
+           'Track_HP',
+           'VBTF',
+           'VBTF_nL8',
+           'VBTF_nL9',
+           'TM',
+           'TMA',
+           'TMLST',
+           'TMLSAT',
+           'TMOST',
+           'TMOSL',
+           'TMOSTQual',
+           'HWWID',]
+#####################################################################################################
                                     ##### efficiencies #####                           
 #####################################################################################################
-def getSF():
+def getSF(mode='ele'):
 
     bch = 16
     batches = int(len(eleIDs)/bch) + 1
@@ -194,7 +217,7 @@ def getSF():
         procs = []
         for ID in eleIDs[n*bch:(n+1)*bch]:
             for i,tag in enumerate(l_eta_tag):
-                proc = Process(target=fillHistosMulti, args=('ele',ID,tag,i))
+                proc = Process(target=fillHistosMulti, args=(mode,ID,tag,i))
                 procs.append(proc)
                 proc.start()
 
@@ -202,7 +225,7 @@ def getSF():
             proc.join()
 
     for ID in eleIDs: 
-        getEffs('ele',ID,True)
+        getEffs(mode,ID,True)
 #####################################################################################################
 
 #####################################################################################################
@@ -212,65 +235,38 @@ def effs(ID=eleIDs[0], mode='ele'):
 #####################################################################################################
 
 #####################################################################################################
-# initialize histos...
-#for i,ID in enumerate(eleIDs):
-# 
-#    mode = 'ele'
-#    tag  = '00t08'
-#
-#    histos['%s_%s_%s_all' %(mode,ID,tag)] = rt.TH1F('pt_eta_%s_%s_%s_all' %(mode,ID,tag),'pt_eta_%s_%s_%s_all' %(mode,ID,tag), len(b_pt)-1, b_pt)
-#    histos['%s_%s_%s_pass'%(mode,ID,tag)] = rt.TH1F('pt_eta_%s_%s_%s_pass'%(mode,ID,tag),'pt_eta_%s_%s_%s_pass'%(mode,ID,tag), len(b_pt)-1, b_pt)
-# 
-#     proc = Process(target=fillHistosMulti, args=('ele', ID , tag , i))
-#     procs.append(proc)
-#     proc.start()
-    
 def fillHistosMulti(mode,ID,tag,i):
 
-    inFileDYtmpEG = 'DY_MG_FS_EG_NTUPLE.root'
+    if mode == 'ele':
+        inFileDYtmp = 'DY_MG_EGamma.root'
+        fin = rt.TFile(inFileDYtmp)
+        tFile = fin.Get('tnpEleIDs')
+        t = tFile.Get('fitter_tree')
 
-    fin = rt.TFile(inFileDYtmpEG)
+    if mode == 'mu':
+        inFileDYtmp = 'DY_MG_Muon.root'
+        fin = rt.TFile(inFileDYtmp)
+        tFile = fin.Get('tpTree')
+        t = tFile.Get('fitter_tree')
 
-    tFile = fin.Get('tnpEleIDs')
+    eta_cut = '%f < abs(el_eta) & abs(el_eta) < %f'%(l_eta[i],l_eta[i+1])
 
-    t = tFile.Get('fitter_tree')
-
-#    h_all  = rt.TH1F('pt_eta_%s_%s_%s_all' %(mode,ID,tag),'pt_eta_%s_%s_%s_all' %(mode,ID,tag), len(b_pt)-1, b_pt)
-#    h_pass = rt.TH1F('pt_eta_%s_%s_%s_pass'%(mode,ID,tag),'pt_eta_%s_%s_%s_pass'%(mode,ID,tag), len(b_pt)-1, b_pt)
-
-#    h_ALL  = rt.TH1F('ALL' , 'ALL' , len(b_pt)-1, b_pt)
-#    h_PASS = rt.TH1F('PASS', 'PASS', len(b_pt)-1, b_pt)
-
-    eta_cut = '%f < abs(tag_Ele_eta) & abs(tag_Ele_eta) < %f'%(l_eta[i],l_eta[i+1])
-
-    cuts_all  = eta_cut + ''
+    cuts_all  = eta_cut + ' & mcTrue == 1 & abs(mass - 91.19) < 20 & el_q + tag_Ele_q == 0' #TODO ADD OPPOSITE CHARGE, MC TRUTH AND 20 GEV AROUND Z MASS
     cuts_pass = cuts_all + ' & ' + ID
 
     print '\n\t mode: %s, eta: %s, ID: %s, all entries: %i, passing: %i, avg eff: %.2f' %(mode, tag, ID, t.GetEntries(cuts_all), t.GetEntries(cuts_pass), t.GetEntries(cuts_pass)/t.GetEntries(cuts_all))
-#    set_trace()
 
     outfile_all = rt.TFile.Open(plotDir + 'tmp/pt_eta_%s_%s_%s_all.root' %(mode,ID,tag), 'recreate')
     outfile_all.cd()
-#    t.Draw( 'tag_Ele_pt >> ' + h_all.GetTitle(), cuts_all)
-    t.Draw( 'tag_Ele_pt>>ALL(99,5,500)', cuts_all)
-#    set_trace()
-#    h_ALL.Write()
+    t.Draw( 'el_pt>>ALL(99,5,500)', cuts_all)
     outfile_all.Write()
     outfile_all.Close()
 
-#    tree.Draw("sqrt(x)>>hsqrt(500,10,20)")
-#     // plot sqrt(x) between 10 and 20 using 500 bins
-
     outfile_pass = rt.TFile.Open(plotDir + 'tmp/pt_eta_%s_%s_%s_pass.root' %(mode,ID,tag), 'recreate')
     outfile_pass.cd()
-#    t.Draw( 'tag_Ele_pt >> ' + h_pass.GetTitle(), cuts_pass)
-    t.Draw( 'tag_Ele_pt>>PASS(99,5,500)', cuts_pass)
-#    h_PASS.Write()
+    t.Draw( 'el_pt>>PASS(99,5,500)', cuts_pass)
     outfile_pass.Write()
     outfile_pass.Close()
-
-#    print '\n\t', h_all .GetEntries()
-#    print '\n\t', h_pass.GetEntries()
 
     print '\n\t filling done... \n'
 #####################################################################################################
@@ -278,13 +274,17 @@ def fillHistosMulti(mode,ID,tag,i):
 #####################################################################################################
 def fillHistos(mode, ID):
 
-    inFileDYtmpEG = 'DY_MG_FS_EG_NTUPLE.root'
+    if mode == 'ele':
+        inFileDYtmp = 'DY_MG_EGamma.root'
+        fin = rt.TFile(inFileDYtmp)
+        tFile = fin.Get('tnpEleIDs')
+        t = tFile.Get('fitter_tree')
 
-    fin = rt.TFile(inFileDYtmpEG)
-
-    tFile = fin.Get('tnpEleIDs')
-
-    t = tFile.Get('fitter_tree')
+    if mode == 'mu':
+        inFileDYtmp = 'DY_MG_Muon.root'
+        fin = rt.TFile(inFileDYtmp)
+        tFile = fin.Get('tpTree')
+        t = tFile.Get('fitter_tree')
 
     for i in range(len(l_eta)-1):
         eta_cut = '%f < abs(tag_Ele_eta) & abs(tag_Ele_eta) < %f'%(l_eta[i],l_eta[i+1])
@@ -374,6 +374,7 @@ def getEffs(mode, ID, fromFile=False): # TODO make this a function
     pf.showlumi(re.sub('passing','',ID))
     pf.showlogopreliminary()
     c_eff.SetLogx()
+    c_eff.SetGridx(0)
     c_eff.Modified(); c_eff.Update()
     save(c_eff, 'pt_eta', 'SF', mode, ID) 
 #####################################################################################################
