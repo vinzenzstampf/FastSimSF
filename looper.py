@@ -103,6 +103,7 @@ h_pt_eta_20t25_all  = rt.TH1F('pt_eta_20t25_all' ,'pt_eta_20t25_all' ,len(b_pt)-
 #####################################################################################################
                                      #####  IDs  #####                           
 #####################################################################################################
+# trivial
 eleIDs=['passingCharge',
         'passingConvIHit0',
         'passingConvIHit0Chg',
@@ -183,6 +184,7 @@ eleIDs=['passingCharge',
         'passingVeto80X',
         'passingVeto94X',
         'passingVeto94XV2',]
+# non-trivial
 #####################################################################################################
 muonIDs = [# 'isTightMuon' # FIXME not there?!
            'Glb',
@@ -212,30 +214,43 @@ def getSF(mode='ele'):
     bch = 16
     batches = int(len(eleIDs)/bch) + 1
 
+    # fill histo's
     for n in range(batches):
 
         procs = []
         for ID in eleIDs[n*bch:(n+1)*bch]:
             for i,tag in enumerate(l_eta_tag):
-                proc = Process(target=fillHistosMulti, args=(mode,ID,tag,i))
+                proc = Process(target=fillHistos, args=(mode,ID,tag,i))
                 procs.append(proc)
                 proc.start()
 
         for proc in procs:
             proc.join()
 
-    for ID in eleIDs: 
-        getEffs(mode,ID,True)
+#    for ID in eleIDs: 
+#        computeEffs(mode,ID,True)
+    
+    # compute eff's
+    for n in range(batches):
+
+        procs = []
+        for ID in eleIDs[n*bch:(n+1)*bch]:
+            proc = Process(target=computeEffs, args=(mode,ID,True))
+            procs.append(proc)
+            proc.start()
+
+        for proc in procs:
+            proc.join()
 #####################################################################################################
 
 #####################################################################################################
-def effs(ID=eleIDs[0], mode='ele'):
-    fillHistos(mode,ID)
-    getEffs(mode, ID)
+def getEff(ID=eleIDs[0], mode='ele'):
+    fillHistosOld(mode,ID)
+    computeEffs(mode, ID)
 #####################################################################################################
 
 #####################################################################################################
-def fillHistosMulti(mode,ID,tag,i):
+def fillHistos(mode,ID,tag,i):
 
     if mode == 'ele':
         inFileDYtmp = 'DY_MG_EGamma.root'
@@ -249,10 +264,16 @@ def fillHistosMulti(mode,ID,tag,i):
         tFile = fin.Get('tpTree')
         t = tFile.Get('fitter_tree')
 
-    eta_cut = '%f < abs(el_eta) & abs(el_eta) < %f'%(l_eta[i],l_eta[i+1])
+    eta_cut = '%f < abs(el_sc_eta) & abs(el_sc_eta) < %f'%(l_eta[i],l_eta[i+1])
 
-    cuts_all  = eta_cut + ' & mcTrue == 1 & abs(mass - 91.19) < 20 & el_q + tag_Ele_q == 0' #TODO ADD OPPOSITE CHARGE, MC TRUTH AND 20 GEV AROUND Z MASS
+    cuts_all  =  eta_cut + ' & tag_Ele_pt > 30 & abs(tag_sc_eta) < 2.17 & mcTrue == 1 & abs(mass - 91.19) < 20 & el_q + tag_Ele_q == 0' 
+    cuts_all  += ' & el_ecalEnergy * sin( 2 * atan( exp(el_sc_eta) ) )  > 0.5 & abs(el_sc_eta) < 2.5'
     cuts_pass = cuts_all + ' & ' + ID
+
+    # ecalEnergy * sin(superClusterPosition.theta)>5.0 &&  (abs(-log(tan(superClusterPosition.theta/2)))<2.5) 
+    # eta = -ln tan theta/2
+    # 2 * arctan(exp(- eta)) = theta
+    # superClusterPosition.theta = 2 * atan(exp(el_sc_eta)) 
 
     print '\n\t mode: %s, eta: %s, ID: %s, all entries: %i, passing: %i, avg eff: %.2f' %(mode, tag, ID, t.GetEntries(cuts_all), t.GetEntries(cuts_pass), t.GetEntries(cuts_pass)/t.GetEntries(cuts_all))
 
@@ -272,7 +293,7 @@ def fillHistosMulti(mode,ID,tag,i):
 #####################################################################################################
 
 #####################################################################################################
-def fillHistos(mode, ID):
+def fillHistosOld(mode, ID):
 
     if mode == 'ele':
         inFileDYtmp = 'DY_MG_EGamma.root'
@@ -302,7 +323,7 @@ def fillHistos(mode, ID):
 #####################################################################################################
 
 #####################################################################################################
-def getEffs(mode, ID, fromFile=False): # TODO make this a function
+def computeEffs(mode, ID, fromFile=False): # TODO make this a function
 
     if fromFile == True:
         f_in = {}
