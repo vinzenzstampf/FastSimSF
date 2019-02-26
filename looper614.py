@@ -13,6 +13,7 @@ from os.path import normpath, basename, split
 from collections import OrderedDict, Counter
 from multiprocessing import Pool, Process
 #from multiprocessing.dummy import Pool, Process
+from ROOT import RDataFrame as rdf
 import pandas, root_numpy
 from itertools import product
 gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
@@ -159,7 +160,7 @@ def getEff(mode='ele',FAST=False, makeHistos=True):
             procs = []
             for ID in IDs.keys()[n*bch:(n+1)*bch]:
                 for i,tag in enumerate(l_eta_tag):
-                    proc = Process(target=fillHistos, args=(mode,ID,tag,i,FAST))
+                    proc = Process(target=fillHistos1D, args=(mode,ID,tag,i,FAST))
                     procs.append(proc)
                     proc.start()
 
@@ -204,7 +205,7 @@ def getSF(mode='ele'):
 #####################################################################################################
 
 #####################################################################################################
-def fillHistos(mode,ID,tag,i,FAST=False):
+def fillHistos1D(mode,ID,tag,i,FAST=False):
  
     cuts_all  = None
     cuts_pass = None
@@ -248,6 +249,113 @@ def fillHistos(mode,ID,tag,i,FAST=False):
         cuts_all  = cuts_all_ele
         cuts_pass = cuts_pass_ele
         lep_pt    = 'el_pt'
+    
+    if mode == 'mu':
+        inFileDYtmp = 'DY_MG_Muon_FS.root' if FAST else 'DY_IDK_MUON_IDK.root'
+        fin = rt.TFile(inFileDYtmp)
+#        tFile = fin.Get('tpTree')
+#        t = tFile.Get('fitter_tree')
+        t = fin.Get('Events')
+
+        eta_cut = '%f < abs(Probe_eta) & abs(Probe_eta) < %f'%(l_eta[i],l_eta[i+1])
+        cuts_all_mu  = eta_cut + ' & Probe_isGenMatched & Probe_charge * Tag_charge < 0'
+        cuts_pass_mu = cuts_all_mu + ' & ' + muonIDs[ID]
+
+        ## special IDs
+        ### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose & passingTightIP2D'
+        if ID in muonIDs_Loose:
+            cuts_all_mu += ' & Probe_passL'
+
+        ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight & passingIDEmu & passingTightIP2D & passingTightIP3D'
+        if ID in muonIDs_Medium:
+            cuts_all_mu += ' & Probe_passM'
+
+        # wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight & passingIDEmu & passingTightIP2D & passingTightIP3D & passingConvVeto & el_mHits == 0'
+        if ID in muonIDs_MediumPrompt:
+            cuts_all_mu += ' & Probe_passMP'
+
+        cuts_all  = cuts_all_mu
+        cuts_pass = cuts_pass_mu
+        lep_pt      = 'Probe_pt' 
+
+#    cuts_all_wghd  = '( ' + cuts_all  + ' ) * %d' %(1./t.GetEntries())
+#    cuts_pass_wghd = '( ' + cuts_pass + ' ) * %d' %(1./t.GetEntries())
+
+    print '\n\t mode: %s, eta: %s, ID: %s, all entries: %i, passing: %i, avg eff: %.2f' %(mode, tag, \
+           ID, t.GetEntries(cuts_all), t.GetEntries(cuts_pass), t.GetEntries(cuts_pass)/t.GetEntries(cuts_all))
+
+    outfile_all = rt.TFile.Open(plotDir + 'tmp/pt_eta_%s_%s_%s_%sall.root' %(mode,ID,tag,fast), 'recreate')
+    outfile_all.cd()
+    t.Draw( lep_pt+'>>ALL(99,5,500)', cuts_all)
+    outfile_all.Write()
+    outfile_all.Close()
+
+    outfile_pass = rt.TFile.Open(plotDir + 'tmp/pt_eta_%s_%s_%s_%spass.root' %(mode,ID,tag,fast), 'recreate')
+    outfile_pass.cd()
+    t.Draw( lep_pt+'>>PASS(99,5,500)', cuts_pass)
+    outfile_pass.Write()
+    outfile_pass.Close()
+
+#    print '\n\t filling done... \n'
+#####################################################################################################
+
+#####################################################################################################
+def fillHistos(mode,ID,tag,i,FAST=False):
+ 
+    cuts_all  = None
+    cuts_pass = None
+    eta_cut   = None
+    fast = ''
+    if FAST: fast = 'FS_'
+
+    if mode == 'ele':
+        inFileDYtmp = 'DY_MG_EGamma_FS.root' if FAST else 'DY_MG_EGamma.root'
+        fin = rt.TFile(inFileDYtmp)
+        tFile = fin.Get('tnpEleIDs')
+        t = tFile.Get('fitter_tree')
+        df = rdf(t)
+
+#        eta_cut       = '%f < abs(el_sc_eta) & abs(el_sc_eta) < %f'%(l_eta[i],l_eta[i+1])
+        cuts_all_ele  =  'tag_Ele_pt > 30 & abs(tag_sc_eta) < 2.17 & mcTrue == 1 & abs(mass - 91.19) < 20 & el_q * tag_Ele_q < 0' 
+        cuts_all_ele  += ' & el_ecalEnergy * sin( 2 * atan( exp(el_sc_eta) ) )  > 0.5 & abs(el_sc_eta) < 2.5'
+
+        f_all = df.Filter(cuts_all_ele).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
+
+        for ID in IDs:
+
+        ## special IDs
+        ### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose & passingTightIP2D'
+        if ID in eleIDs_mvaVLooseTightIP2D:
+            df_all = f_all.Filter('passingMVAVLoose & passingTightIP2D')
+
+        ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight & passingIDEmu & passingTightIP2D & passingTightIP3D'
+        if ID in eleIDs_mvaTightIDEmuTightIP2DTightIP3D:
+            df_all = f_all.Filter('passingMVATight & passingIDEmu & passingTightIP2D & passingTightIP3D')
+
+        # wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight & passingIDEmu & passingTightIP2D & passingTightIP3D & passingConvVeto & el_mHits == 0'
+        if ID in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits:
+            df_all  = f_all.Filter('passingMVATight & passingIDEmu & passingTightIP2D & passingTightIP3D & passingConvVeto & el_mHits == 0')
+ 
+        if ID not in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits and not in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits and not in eleIDs_mvaVLooseTightIP2D:
+            df_all  = f_all
+
+        df_pass = df_all.Filter(eleIDs[ID])
+
+        h_all  = df_all .Histo2D(('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), 'el_pt', 'abs_el_sc_eta') 
+        h_pass = df_pass.Histo2D(('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), 'el_pt', 'abs_el_sc_eta') 
+
+        outfile_all = rt.TFile.Open(plotDir + 'tmp/pt_eta_%s_%s_%sall.root' %(mode,ID,fast), 'recreate')
+        outfile_all.cd()
+        h_all.Draw()
+        outfile_all.Write()
+        outfile_all.Close()
+
+        outfile_pass = rt.TFile.Open(plotDir + 'tmp/pt_eta_%s_%s_%spass.root' %(mode,ID,fast), 'recreate')
+        outfile_pass.cd()
+        h_pass.Draw()
+        outfile_pass.Write()
+        outfile_pass.Close()
+
     
     if mode == 'mu':
         inFileDYtmp = 'DY_MG_Muon_FS.root' if FAST else 'DY_IDK_MUON_IDK.root'
