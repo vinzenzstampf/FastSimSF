@@ -52,38 +52,43 @@ sf_framer.SetTitle(';p_{T} [GeV]; FastSim / FullSim')
 #####################################################################################################
                                      #####  IDs  #####                           
 #####################################################################################################
-#MVATight (3/6/19)
-mvaTight = {'passingMVATightNew2' : '(( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25' \
-                                    ' && el_MVA94Xnoiso > 0.68) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.)))'\
-                                    ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 &&' \
-                                    ' el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
-                                    ' && el_MVA94Xnoiso > 0.32))',}
+# MVATight (3/6/19)
+# https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L39
+# 'passingMVATightNew2 == 1'
+mvaTight = '(( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25' \
+           ' && el_MVA94Xnoiso > 0.68) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.)))'\
+           ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 &&' \
+           ' el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
+           ' && el_MVA94Xnoiso > 0.32))'
 ##################################################################################################################################################################################################
 # low_pt = 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45' # can't use event_met not defined
 ##################################################################################################################################################################################################
-CutBase_mvaVLooseTightIP2D = 'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25' \
-                             ' && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.)))' \
-                             ' || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > 0.68) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25' \
-                             ' && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.))) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475)' \
-                             ' || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.)))' \
-                             ' || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25 && el_MVA94Xnoiso > 0.32)) && passingTightIP2D && passingTightIP3D && passingIDEmu)'
+# https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_passMVAVLooseTightIP2D.py#L97
+CutBase_mvaVLooseTightIP2D = ' tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=5 && el_pt < 10'\
+                             ' && el_MVA94Xnoiso > (0.488)) || ( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.788 + (0.148/15.)*(el_pt-10.)))'\
+                             ' || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > -0.640) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=5 && el_pt < 10'\
+                             ' && el_MVA94Xnoiso > (-0.045)) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25'\
+                             ' && el_MVA94Xnoiso > (-0.850 + (0.075/15.)*(el_pt-10.))) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > -0.775)'\
+                             ' || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (0.176)) || ( abs(el_eta) >= 1.479'\
+                             ' && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.81 + (0.077/15.)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5'\
+                             ' && el_pt >= 25 && el_MVA94Xnoiso > -0.733))) && passingTightIP2D == 1'
 ##################################################################################################################################################################################################
+# https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmu.py#L98
 CutBase_mvaTightIDEmuTightIP2DTightIP3D = 'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25' \
                                           ' && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > 0.68)' \
                                           ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.)))' \
                                           ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5' \
                                           ' && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5' \
-                                          ' && el_pt >= 25 && el_MVA94Xnoiso > 0.32)) && passingTightIP2D && passingTightIP3D && passingIDEmu)'
+                                          ' && el_pt >= 25 && el_MVA94Xnoiso > 0.32)) && passingTightIP2D == 1 && passingTightIP3D == 1 && passingIDEmu == 1)' \
 ##################################################################################################################################################################################################
-CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits   = 'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=5 && el_pt < 10' \
-                                                            ' && el_MVA94Xnoiso > (0.488)) || ( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25' \
-                                                            ' && el_MVA94Xnoiso > (-0.788 + (0.148/15.)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > -0.640)' \
-                                                            ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (-0.045))' \
-                                                            ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.850 + (0.075/15.)*(el_pt-10.)))' \
-                                                            ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > -0.775) || ( abs(el_eta) >= 1.479' \
-                                                            ' && abs(el_eta) < 2.5 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (0.176)) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5' \
-                                                            ' && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.81 + (0.077/15.)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5' \
-                                                            ' && el_pt >= 25 && el_MVA94Xnoiso > -0.733))) && passingTightIP2D'
+# https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmuConvIHit0.py#L91
+CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits   = 'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25'\
+                                                            ' && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > 0.68)'\
+                                                            ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.)))'\
+                                                            ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479'\
+                                                            ' && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.)))'\
+                                                            ' || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25 && el_MVA94Xnoiso > 0.32)) && passingTightIP2D == 1'\
+                                                            ' && passingTightIP3D == 1 && passingIDEmu == 1 && (el_mHits==0) && passingConvVeto == 1)'
 ##################################################################################################################################################################################################
 ### wrt RECO # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Data2018_v1/etc/config/settings_ele_wrtReco.py#L10-L41
 eleIDs_reco = {
@@ -97,23 +102,82 @@ eleIDs_reco = {
     'Run2017_CutBasedMediumNoIso94XV2'                 : 'passingCutBasedMediumNoIso94XV2 == 1' ,
     'Run2017_CutBasedTightNoIso94XV2'                  : 'passingCutBasedTightNoIso94XV2 == 1'  ,
 
-    'Run2017_MVAVLooseIP2D'                            : 'passingMVAVLoose == 1 && passingTightIP2D == 1',                                      
-    'Run2017_MVAVLooseFOIP2DIDEmu'                     : 'passingMVAVLooseFO == 1 && passingIDEmu == 1 && passingTightIP2D == 1',                           
-#    'Run2017_MVATightTightIP2D3D'                      : 'passingMVATight == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',                           
-    'Run2017_MVATightTightIP2D3D'                      :  mvaTight['passingMVATightNew2'] + ' && passingTightIP2D == 1 && passingTightIP3D == 1',                           
-#    'Run2017_MVATightIP2D3DIDEmu'                      : 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',                 
-    'Run2017_MVATightIP2D3DIDEmu'                      :  mvaTight['passingMVATightNew2'] + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',                 
-    'Run2017_LeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04' : 'passingLeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04 == 1',
-    'Run2017_LeptonMvaMIDEmuTightIP2DSIP3D8miniIso04'  : 'passingLeptonMvaMIDEmuTightIP2DSIP3D8miniIso04 == 1',}
-### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose == 1 && passingTightIP2D == 1'
-### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_passMVAVLooseTightIP2D.py
+#    'Run2017_MVAVLooseIP2D'                            : 'passingMVAVLoose == 1 && passingTightIP2D == 1',                                                                    #v0         
+#    'Run2017_MVAVLooseFOIP2DIDEmu'                     : 'passingMVAVLooseFO == 1 && passingIDEmu == 1 && passingTightIP2D == 1',                                             #v0 
+#    'Run2017_MVATightTightIP2D3D'                      : 'passingMVATight == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'                                             #v0
+#    'Run2017_MVATightIP2D3DIDEmu'                      : 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',                       #v0               
+#    'Run2017_MVATightTightIP2D3D'                      :  mvaTight['passingMVATightNew2 == 1'] + ' && passingTightIP2D == 1 && passingTightIP3D == 1',                        #v1 added 3/6   
+#    'Run2017_MVATightIP2D3DIDEmu'                      :  mvaTight['passingMVATightNew2 == 1'] + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',   #v1 added 3/6 
+#    'Run2017_LeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04' : 'passingLeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04 == 1',                                                              #v0             
+#    'Run2017_LeptonMvaMIDEmuTightIP2DSIP3D8miniIso04'  : 'passingLeptonMvaMIDEmuTightIP2DSIP3D8miniIso04 == 1',                                                               #v0            
+
+    # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L43
+    # added 3/7
+    'Run2017_MVAVLooseIP2D'                            : '(( abs(el_eta) < 0.8 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (0.488)) || ( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (-0.788 + (0.148/15.)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > -0.640)' \
+                                                         ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (-0.045)) || ( abs(el_eta) >= 0.8' \
+                                                         ' && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.850 + (0.075/15.)*(el_pt-10.))) || ( abs(el_eta) >= 0.8' \
+                                                         ' && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > -0.775) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=5' \
+                                                         ' && el_pt < 10 && el_MVA94Xnoiso > (0.176)) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (-0.81 + (0.077/15.)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
+                                                         ' && el_MVA94Xnoiso > -0.733)) && passingTightIP2D == 1', 
+
+    # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L45
+    # added 3/7
+    'Run2017_MVAVLooseFOIP2DIDEmu'                     : '(( abs(el_eta) < 0.8 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (-0.135)) || ( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (-0.930 + (0.043/15.)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25 && el_MVA94Xnoiso > -0.887)' \
+                                                         ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=5 && el_pt < 10 && el_MVA94Xnoiso > (-0.417)) || ( abs(el_eta) >= 0.8' \
+                                                         ' && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.93 + (0.04/15.)*(el_pt-10.))) || ( abs(el_eta) >= 0.8' \
+                                                         ' && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > -0.890) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=5' \
+                                                         ' && el_pt < 10 && el_MVA94Xnoiso > (-0.470)) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (-0.942 + (0.032/15.)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
+                                                         ' && el_MVA94Xnoiso > -0.910)) && passingTightIP2D == 1 && passingIDEmu == 1', 
+
+    # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L40
+    # added 3/7
+    'Run2017_MVATightTightIP2D3D'                      : '((( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8' \
+                                                         ' && el_pt >= 25 && el_MVA94Xnoiso > 0.68) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.))) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25' \
+                                                         ' && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
+                                                         ' && el_MVA94Xnoiso > 0.32)) && passingTightIP2D == 1 && passingTightIP3D == 1)',
+
+    # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L41
+    # added 3/7
+    'Run2017_MVATightIP2D3DIDEmu'                      : '(( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8' \
+                                                         ' && el_pt >= 25 && el_MVA94Xnoiso > 0.68) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.))) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25' \
+                                                         ' && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >=10 && el_pt < 25' \
+                                                         ' && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
+                                                         ' && el_MVA94Xnoiso > 0.32)) && passingTightIP2D == 1 && passingTightIP3D == 1 && passingIDEmu == 1',}
+
+    # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L50
+    # added 3/7
+#    'Run2017_LeptonMvaMIDEmuTightIP2DSIP3D8miniIso04' : '((el_MVATTH>0.85) && passingIDEmu == 1 && passingTightIP2D == 1 && (abs(el_sip3d)<8) && passingMini4 == 1)',    # WILL BE RETRAINED
+
+    # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L51
+    # added 3/7
+#    'Run2017_LeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04'  : '((el_MVATTH>0.90) && passingIDEmu == 1 && passingTightIP2D == 1 && (abs(el_sip3d)<8) && passingMini4 == 1)',  # WILL BE RETRAINED
+
+
+    ### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose == 1 && passingTightIP2D == 1'
+    ### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_passMVAVLooseTightIP2D.py
+#    'Run2017_MVAVLooseTightIP2DMini'                   : 'passingMVAVLooseMini == 1',   #v0
+#    'Run2017_MVAVLooseTightIP2DMini2'                  : 'passingMVAVLooseMini2 == 1',  #v0 
+#    'Run2017_MVAVLooseTightIP2DMini4'                  : 'passingMVAVLooseMini4 == 1',  #v0
+
 eleIDs_mvaVLooseTightIP2D = {
-    'Run2017_MVAVLooseTightIP2DMini'                   : 'passingMVAVLooseMini == 1',
-    'Run2017_MVAVLooseTightIP2DMini2'                  : 'passingMVAVLooseMini2 == 1',
-    'Run2017_MVAVLooseTightIP2DMini4'                  : 'passingMVAVLooseMini4 == 1',}
-### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'
-### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmu.py
+    # MiniIsolations: https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_passMVAVLooseTightIP2D.py#L22-L24
+    # These are with respect to MVAVLoose + IP2D. You can just use "passingMini*" instead of the above long cut string. The MVA cut is redundant since you put the cut in denominator itself.
+    # added 3/7
+    'Run2017_MVAVLooseTightIP2DMini'                   : 'passingMini == 1',   
+    'Run2017_MVAVLooseTightIP2DMini2'                  : 'passingMini2 == 1',   
+    'Run2017_MVAVLooseTightIP2DMini4'                  : 'passingMini4 == 1',  
+}
+
 eleIDs_mvaTightIDEmuTightIP2DTightIP3D = {
+    ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'
+    ### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmu.py#L19-L26
     'Run2017_MultiIsoM'                                : 'passingMultiIsoM == 1',
     'Run2017_MultiIsoT'                                : 'passingMultiIsoT == 1',
     'Run2017_MultiIsoEmu'                              : 'passingMultiIsoEmu == 1',
@@ -122,10 +186,11 @@ eleIDs_mvaTightIDEmuTightIP2DTightIP3D = {
     'Run2017_MultiIsoNew'                              : '( (el_miniIsoAll/el_pt) < 0.09 ) && ( el_ptRatio > 0.85 || el_ptRel > 9.2 )',
     'Run2017_MultiIsoJECv32'                           : '( (el_miniIsoAll/el_pt) < 0.07 ) && ( el_ptRatio > 0.78 || el_ptRel > 8.0 )',
     'Run2017_MultiIsoEmuJECv32'                        : '( (el_miniIsoAll/el_pt) < 0.07 ) && ( el_ptRatio > 0.78 || el_ptRel > 8.0) && passingISOEmu == 1',}
-### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1' \
-###                                                                              ' && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0'
-### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmuConvIHit0.py
+
 eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits = {
+    ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1' \
+    ###                                                                              ' && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0'
+    ### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmuConvIHit0.py
     'Run2017_3Qagree'                                  : 'passingCharge == 1',}
 
 eleIDs = dict(eleIDs_reco.items() + eleIDs_mvaVLooseTightIP2D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits.items())
@@ -180,7 +245,7 @@ def getSF(mode='ele'):
 #####################################################################################################
 
 #####################################################################################################
-def makeEffs2D(mode,FAST=False):
+def makeEffs2D(mode='ele',FAST=False,RDF=False):
  
      
     cuts_all  = None
@@ -193,36 +258,52 @@ def makeEffs2D(mode,FAST=False):
     print'\n\tFastSim:', FAST
 
     if mode == 'ele':
-        inFileDYtmp = 'DY_MG_EGamma_17_FastSim..root' if FAST else 'DY_MG_EGamma_17_FullSim.root'
+        inFileDYtmp = 'DY_MG_EGamma_17_FastSim.root' if FAST else 'DY_MG_EGamma_17_FullSim.root'
         fin = rt.TFile(inFileDYtmp)
         tFile = fin.Get('tnpEleIDs')
         t = tFile.Get('fitter_tree')
-        df = rdf(t)
         IDs = eleIDs
  
-        cuts_all =  'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && mcTrue == 1 && abs(mass - 91.19) < 20 && el_q * tag_Ele_q < 0' 
+        cuts_all =  'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && mcTrue == 1 && abs(mass - 91.19) < 30 && el_q * tag_Ele_q < 0' 
         cuts_all += ' && el_ecalEnergy * sin( 2 * atan( exp(el_sc_eta) ) )  > 0.5 && abs(el_sc_eta) < 2.5'
+        if RDF == False:
+            cuts_all += ' && tag_Ele_trigMVA > 0.92 && sqrt( 2*mpfMET*tag_Ele_pt*(1-cos(mpfPhi-tag_Ele_phi))) < 45'
 
         lep_pt   = 'el_pt'
         lep_eta  = 'abs_el_sc_eta'
         
-        f_all = df.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
+        if RDF == True:
+            df = rdf(t)
+            f_all = df.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
 
     if mode == 'mu':
         inFileDYtmp = 'DY_MG_Muon_FS.root' if FAST else 'DY_IDK_MUON_IDK.root'
         fin = rt.TFile(inFileDYtmp)
         t = fin.Get('Events')
-        df = rdf(t)
         IDs = muonIDs
  
         cuts_all = 'Probe_isGenMatched == 1 && Probe_charge * Tag_charge < 0'
         lep_pt   = 'Probe_pt' 
         lep_eta  = 'abs_probe_eta'
 
-        f_all = df.Filter(cuts_all).Define('abs_probe_eta', 'abs(Probe_eta)')
+        if RDF == True:
+            df = rdf(t)
+            f_all = df.Filter(cuts_all).Define('abs_probe_eta', 'abs(Probe_eta)')
 
-    print '\n\tentries before selection: %d' %df.Count().GetValue()
-    print '\n\tentries after pre-selection: %d' %f_all.Count().GetValue()
+    if RDF == True:
+        n_bef = df.Count().GetValue()
+        n_aft = f_all.Count().GetValue()
+
+    if RDF == False:
+        n_bef = t.GetEntries()
+        n_aft = t.GetEntries(cuts_all)
+
+    print '\n\tentries before selection: %d'    %n_bef
+
+    print '\n\tentries after pre-selection: %d' %n_aft
+
+    print '\n\tcuts_all: %s\n' %cuts_all
+
 
     for ID in IDs.keys():#[:1]:
 
@@ -230,25 +311,33 @@ def makeEffs2D(mode,FAST=False):
             ## special IDs
             ### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose == 1 && passingTightIP2D == 1'
             if ID in eleIDs_mvaVLooseTightIP2D:
-                df_all = f_all.Filter('passingMVAVLoose == 1 && passingTightIP2D == 1 && ' + CutBase_mvaVLooseTightIP2D)
+                filtr_all = IDs['Run2017_MVAVLooseIP2D'] + ' && ' + CutBase_mvaVLooseTightIP2D
+                if RDF == True:
+                    df_all = f_all.Filter(filtr_all)
 
             ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'
             if ID in eleIDs_mvaTightIDEmuTightIP2DTightIP3D:
                 # df_all = f_all.Filter('passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1')
                 # 3/6/19 gio: mvaTight is new
-                df_all = f_all.Filter(mvaTight['passingMVATightNew2'] + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && ' + CutBase_mvaTightIDEmuTightIP2DTightIP3D) 
+                filtr_all = mvaTight + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && ' + CutBase_mvaTightIDEmuTightIP2DTightIP3D
+                if RDF == True:
+                    df_all = f_all.Filter(filtr_all) 
 
             # wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight == 1 && passingIDEmu == 1'\
             #                                                                              ' && passingTightIP2D == 1 && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0'
             if ID in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits:
                 # df_all  = f_all.Filter('passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0')
                 # 3/6/19 gio: mvaTight is new
-                df_all  = f_all.Filter(mvaTight['passingMVATightNew2'] + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1' \
-                                      '  && passingConvVeto == 1 && el_mHits == 0 && ' + CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits)     
-            if ID not in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits \
-               and ID not in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits \
-               and ID not in eleIDs_mvaVLooseTightIP2D:
-                df_all  = f_all
+                filtr_all = mvaTight + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0' \
+                                       ' && ' + CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits  
+                if RDF == True:
+                    df_all  = f_all.Filter(filtr_all)
+                    
+            if RDF == True: 
+                if ID not in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits \
+                   and ID not in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits \
+                   and ID not in eleIDs_mvaVLooseTightIP2D:
+                    df_all  = f_all
 
         if ID in muonIDs:
             ## special IDs
@@ -268,15 +357,29 @@ def makeEffs2D(mode,FAST=False):
             if ID not in muonIDs_Loose and ID not in muonIDs_Medium and ID not in muonIDs_MediumPrompt:
                 df_all  = f_all
 
-        df_pass = df_all.Filter(IDs[ID])
+        if RDF == True:
+            df_pass = df_all.Filter(IDs[ID])
 
-        h_all_ptr  = df_all .Histo2D(('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
-        h_pass_ptr = df_pass.Histo2D(('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
+            h_all_ptr  = df_all .Histo2D(('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
+            h_pass_ptr = df_pass.Histo2D(('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
 
-        h_all  = h_all_ptr.GetPtr()
-        h_pass = h_pass_ptr.GetPtr()
+            h_all  = h_all_ptr.GetPtr()
+            h_pass = h_pass_ptr.GetPtr()
 
-        print '\n\t mode: %s, ID: %s, all entries: %i, passing: %i, avg eff: %.2f' %(mode, ID, h_all.GetEntries(), h_pass.GetEntries(), h_pass.GetEntries()/h_all.GetEntries())
+        if RDF == False:
+            filtr_pass = filtr_all + ' && ' + IDs[ID]
+
+            h_all  = rt.TH2F('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
+            h_pass = rt.TH2F('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
+
+            t.Draw('abs(el_sc_eta):el_pt>>eta_all' , cuts_all + ' && ' + filtr_all)
+            t.Draw('abs(el_sc_eta):el_pt>>eta_pass', cuts_all + ' && ' + filtr_pass)
+
+        print '\n\tmode: %s, ID: %s, all entries: %i, passing: %i, avg eff: %.2f' %(mode, ID, h_all.GetEntries(), h_pass.GetEntries(), h_pass.GetEntries()/h_all.GetEntries())
+
+        print '\n\tfilr_all: %s' %filtr_all
+
+        print '\n\tfiltr_pass: %s\n' %(filtr_all + ' && ' + IDs[ID])
 
         h_pass.Divide(h_all)
 
@@ -292,9 +395,6 @@ def makeEffs2D(mode,FAST=False):
     #    c_eff.SetGridx(0)
         c_eff.Modified(); c_eff.Update()
         save(c_eff, 'pt_eta', 'SUSY', mode, ID + '_FastSim' if FAST else ID + '_FullSim') 
-
-#     cuts_all_wghd  = '( ' + cuts_all  + ' ) * %d' %(1./t.GetEntries())
-#     cuts_pass_wghd = '( ' + cuts_pass + ' ) * %d' %(1./t.GetEntries())
 #####################################################################################################
 
 #####################################################################################################
