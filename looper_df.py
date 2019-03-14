@@ -21,11 +21,11 @@ gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
 import os
 #from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
 pf.setpfstyle()
-####################################################################################################
+##################################################################################################################################################################################################
 plotDir     = '/t3home/vstampf/eos/plots/SF/'
-#####################################################################################################
+##################################################################################################################################################################################################
                                     ##### histos #####                           
-#####################################################################################################
+##################################################################################################################################################################################################
 l_pt  = [5.0, 10.0, 20.0, 35.0, 50.0, 100.0, 200.0, 500.0]
 b_pt  = np.array(l_pt)
 
@@ -49,19 +49,18 @@ sf_framer.GetXaxis().SetRangeUser(1, 505)
 sf_framer.GetXaxis().SetMoreLogLabels()
 sf_framer.GetXaxis().SetNoExponent()
 sf_framer.SetTitle(';p_{T} [GeV]; FastSim / FullSim')
-#####################################################################################################
+##################################################################################################################################################################################################
                                      #####  IDs  #####                           
-#####################################################################################################
-# MVATight (3/6/19)
-# https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L39
-# 'passingMVATightNew2 == 1'
+##################################################################################################################################################################################################
+###### MVATight (3/6/19)
+###### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L39
+###### 'passingMVATightNew2 == 1'
+##################################################################################################################################################################################################
 mvaTight = '(( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.2 + (0.032)*(el_pt-10.))) || ( abs(el_eta) < 0.8 && el_pt >= 25' \
            ' && el_MVA94Xnoiso > 0.68) || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (0.1 + (0.025)*(el_pt-10.)))'\
            ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 &&' \
            ' el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5 && el_pt >= 25' \
            ' && el_MVA94Xnoiso > 0.32))'
-##################################################################################################################################################################################################
-# low_pt = 'tag_Ele_trigMVA > 0.92 && sqrt( 2*event_met_pfmet*tag_Ele_pt*(1-cos(event_met_pfphi-tag_Ele_phi))) < 45' # can't use event_met not defined
 ##################################################################################################################################################################################################
 # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_passMVAVLooseTightIP2D.py#L97
 CutBase_mvaVLooseTightIP2D = ' tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=5 && el_pt < 10'\
@@ -80,6 +79,7 @@ CutBase_mvaTightIDEmuTightIP2DTightIP3D = 'tag_Ele_pt > 30 && abs(tag_sc_eta) < 
                                           ' || ( abs(el_eta) >= 0.8 && abs(el_eta) < 1.479 && el_pt >= 25 && el_MVA94Xnoiso > 0.475) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5' \
                                           ' && el_pt >=10 && el_pt < 25 && el_MVA94Xnoiso > (-0.1 + (0.028)*(el_pt-10.))) || ( abs(el_eta) >= 1.479 && abs(el_eta) < 2.5' \
                                           ' && el_pt >= 25 && el_MVA94Xnoiso > 0.32)) && passingTightIP2D == 1 && passingTightIP3D == 1 && passingIDEmu == 1)' \
+                                          ' && tag_Ele_trigMVA > 0.92 && sqrt( 2*mpfMET*tag_Ele_pt*(1-cos(mpfPhi-tag_Ele_phi))) < 45' # low pT add'_cuts only used for multiIso
 ##################################################################################################################################################################################################
 # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmuConvIHit0.py#L91
 CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits   = 'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && el_q*tag_Ele_q < 0 && ((( abs(el_eta) < 0.8 && el_pt >=10 && el_pt < 25'\
@@ -178,14 +178,15 @@ eleIDs_mvaVLooseTightIP2D = {
 eleIDs_mvaTightIDEmuTightIP2DTightIP3D = {
     ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'
     ### https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtMVATightNewTightIP2D3DIDEmu.py#L19-L26
-    'Run2017_MultiIsoM'                                : 'passingMultiIsoM == 1',
-    'Run2017_MultiIsoT'                                : 'passingMultiIsoT == 1',
-    'Run2017_MultiIsoEmu'                              : 'passingMultiIsoEmu == 1',
+#    'Run2017_MultiIsoM'                                : 'passingMultiIsoM == 1',
+#    'Run2017_MultiIsoT'                                : 'passingMultiIsoT == 1',
+#    'Run2017_MultiIsoEmu'                              : 'passingMultiIsoEmu == 1',
     'Run2017_ConvIHit0'                                : 'passingConvVeto == 1 && el_mHits == 0',
     'Run2017_ConvIHit1'                                : 'passingConvVeto == 1 && el_mHits < 2',
-    'Run2017_MultiIsoNew'                              : '( (el_miniIsoAll/el_pt) < 0.09 ) && ( el_ptRatio > 0.85 || el_ptRel > 9.2 )',
+#    'Run2017_MultiIsoNew'                              : '( (el_miniIsoAll/el_pt) < 0.09 ) && ( el_ptRatio > 0.85 || el_ptRel > 9.2 )',
     'Run2017_MultiIsoJECv32'                           : '( (el_miniIsoAll/el_pt) < 0.07 ) && ( el_ptRatio > 0.78 || el_ptRel > 8.0 )',
-    'Run2017_MultiIsoEmuJECv32'                        : '( (el_miniIsoAll/el_pt) < 0.07 ) && ( el_ptRatio > 0.78 || el_ptRel > 8.0) && passingISOEmu == 1',}
+    'Run2017_MultiIsoEmuJECv32'                        : '( (el_miniIsoAll/el_pt) < 0.07 ) && ( el_ptRatio > 0.78 || el_ptRel > 8.0) && passingISOEmu == 1',
+}
 
 eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits = {
     ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1' \
@@ -194,7 +195,7 @@ eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits = {
     'Run2017_3Qagree'                                  : 'passingCharge == 1',}
 
 eleIDs = dict(eleIDs_reco.items() + eleIDs_mvaVLooseTightIP2D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits.items())
-#####################################################################################################
+##################################################################################################################################################################################################
 muonIDs_Loose = {
     'miniIso04_LooseId'         :   'Probe_passMiniIsoL == 1',
     'miniIso02_LooseId'         :   'Probe_passMiniIsoM == 1',  
@@ -218,10 +219,10 @@ muonIDs_MediumPrompt = {
 #    'LeptonMVAVT_MediumPrompt'  :   'Probe_passMVAVT == 1 && Probe_passMiniIsoL == 1',
 }
 muonIDs = dict(muonIDs_Loose.items() + muonIDs_Medium.items() + muonIDs_MediumPrompt.items())
-#####################################################################################################
+##################################################################################################################################################################################################
                                     ##### efficiencies #####                           
-#####################################################################################################
-def getSF(mode='ele'):
+##################################################################################################################################################################################################
+def getSF(mode='ele',yr=17):
     
     if mode == 'ele':
         IDs = eleIDs
@@ -236,16 +237,16 @@ def getSF(mode='ele'):
 
         procs = []
         for ID in IDs.keys()[n*bch:(n+1)*bch]:
-            proc = Process(target=computeSFs2D, args=(mode,ID))
+            proc = Process(target=computeSFs2D, args=(mode,ID,yr))
             procs.append(proc)
             proc.start()
 
         for proc in procs:
             proc.join()
-#####################################################################################################
+##################################################################################################################################################################################################
 
-#####################################################################################################
-def makeEffs2D(mode='ele',FAST=False,RDF=False):
+##################################################################################################################################################################################################
+def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
  
      
     cuts_all  = None
@@ -258,7 +259,10 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
     print'\n\tFastSim:', FAST
 
     if mode == 'ele':
-        inFileDYtmp = 'DY_MG_EGamma_17_FastSim.root' if FAST else 'DY_MG_EGamma_17_FullSim.root'
+        if yr == 17:
+            inFileDYtmp = 'DY_MG_EGamma_17_FastSim.root' if FAST else 'DY_MG_EGamma_17_FullSim.root'
+        if yr == 18:
+            inFileDYtmp = '' if FAST else 'DY_MG_EGamma_18_FullSim.root'
         fin = rt.TFile(inFileDYtmp)
         tFile = fin.Get('tnpEleIDs')
         t = tFile.Get('fitter_tree')
@@ -266,8 +270,9 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
  
         cuts_all =  'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && mcTrue == 1 && abs(mass - 91.19) < 30 && el_q * tag_Ele_q < 0' 
         cuts_all += ' && el_ecalEnergy * sin( 2 * atan( exp(el_sc_eta) ) )  > 0.5 && abs(el_sc_eta) < 2.5'
-        if RDF == False:
-            cuts_all += ' && tag_Ele_trigMVA > 0.92 && sqrt( 2*mpfMET*tag_Ele_pt*(1-cos(mpfPhi-tag_Ele_phi))) < 45'
+#       this is now used only for the multi-iso ID's
+#        if RDF == False:
+#            cuts_all += ' && tag_Ele_trigMVA > 0.92 && sqrt( 2*mpfMET*tag_Ele_pt*(1-cos(mpfPhi-tag_Ele_phi))) < 45'
 
         lep_pt   = 'el_pt'
         lep_eta  = 'abs_el_sc_eta'
@@ -282,7 +287,10 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
         t = fin.Get('Events')
         IDs = muonIDs
  
-        cuts_all = 'Probe_isGenMatched == 1 && Probe_charge * Tag_charge < 0'
+        if FAST == False:
+            cuts_all = 'Probe_isGenMatched == 1 && Probe_charge * Tag_charge < 0'
+        if FAST == True:
+            cuts_all = 'Probe_charge * Tag_charge < 0'                         
         lep_pt   = 'Probe_pt' 
         lep_eta  = 'abs_probe_eta'
 
@@ -306,6 +314,7 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
 
 
     for ID in IDs.keys():#[:1]:
+        filtr_all = '1'
 
         if ID in eleIDs:
             ## special IDs
@@ -343,19 +352,26 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
             ## special IDs
             ### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose == 1 && passingTightIP2D == 1'
             if ID in muonIDs_Loose:
-                df_all  = f_all.Filter('Probe_passL == 1')
+                filtr_all = 'Probe_passL == 1'
+                if RDF == True:
+                    df_all  = f_all.Filter(filtr_all)
      
             ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'
             if ID in muonIDs_Medium:
-                df_all  = f_all.Filter('Probe_passM == 1')
+                filtr_all = 'Probe_passM == 1'
+                if RDF == True:
+                    df_all  = f_all.Filter(filtr_all)
      
             ### wrt MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0, 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1'\
             ### '&& passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0'
             if ID in muonIDs_MediumPrompt:
-                df_all  = f_all.Filter('Probe_passMP == 1')
+                filtr_all = 'Probe_passMP == 1'
+                if RDF == True:
+                    df_all  = f_all.Filter(filtr_all)
 
-            if ID not in muonIDs_Loose and ID not in muonIDs_Medium and ID not in muonIDs_MediumPrompt:
-                df_all  = f_all
+            if RDF == True:
+                if ID not in muonIDs_Loose and ID not in muonIDs_Medium and ID not in muonIDs_MediumPrompt:
+                    df_all  = f_all
 
         if RDF == True:
             df_pass = df_all.Filter(IDs[ID])
@@ -372,14 +388,28 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
             h_all  = rt.TH2F('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
             h_pass = rt.TH2F('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
 
-            t.Draw('abs(el_sc_eta):el_pt>>eta_all' , cuts_all + ' && ' + filtr_all)
-            t.Draw('abs(el_sc_eta):el_pt>>eta_pass', cuts_all + ' && ' + filtr_pass)
+#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , '( ' + cuts_all + ' && ' + filtr_all  + ' ) * ( 2 * (truePU>=20) + 1 * (truePU<20) )' )
+#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', '( ' + cuts_all + ' && ' + filtr_pass + ' ) * ( 2 * (truePU>=20) + 1 * (truePU<20) )' )
+
+            if yr == 17:
+                CUTS_ALL  = cuts_all + ' && ' + filtr_all 
+                CUTS_PASS = cuts_all + ' && ' + filtr_pass
+
+            if yr == 18:
+                CUTS_ALL  = (cuts_all + ' && ' + filtr_all ).replace('el_MVA94Xnoiso','el_noIsoMVA94X')
+                CUTS_PASS = (cuts_all + ' && ' + filtr_pass).replace('el_MVA94Xnoiso','el_noIsoMVA94X')
+
+            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , CUTS_ALL)
+            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', CUTS_PASS)
+
+        if yr == 18:
+            ID = ID.replace('2017','2018')
 
         print '\n\tmode: %s, ID: %s, all entries: %i, passing: %i, avg eff: %.2f' %(mode, ID, h_all.GetEntries(), h_pass.GetEntries(), h_pass.GetEntries()/h_all.GetEntries())
 
-        print '\n\tfilr_all: %s' %filtr_all
+        print '\n\tfiltr_all: %s' %filtr_all
 
-        print '\n\tfiltr_pass: %s\n' %(filtr_all + ' && ' + IDs[ID])
+        print '\n\tfiltr_pass: %s\n' %(filtr_all + ' && ' + IDs[re.sub('Run201._','Run2017_',ID)])
 
         h_pass.Divide(h_all)
 
@@ -391,17 +421,21 @@ def makeEffs2D(mode='ele',FAST=False,RDF=False):
         h_pass.GetXaxis().SetNoExponent()
         h_pass.GetXaxis().SetMoreLogLabels()
 #            pf.showlogo('CMS')
-        pf.showlumi(re.sub('Run2017_','',ID + '_FastSim' if FAST else ID + '_FullSim'))
+        pf.showlumi(re.sub('Run201._','',ID + '_FastSim' if FAST else ID + '_FullSim'))
     #    c_eff.SetGridx(0)
         c_eff.Modified(); c_eff.Update()
         save(c_eff, 'pt_eta', 'SUSY', mode, ID + '_FastSim' if FAST else ID + '_FullSim') 
-#####################################################################################################
+##################################################################################################################################################################################################
 
-#####################################################################################################
-def computeSFs2D(mode, ID): 
+##################################################################################################################################################################################################
+def computeSFs2D(mode, ID, yr): 
     
-    f_in_full = rt.TFile(plotDir + 'SUSY_%s_eff_pt_eta_%s.root'   %(mode,ID)).Get('eff')
-    f_in_fast = rt.TFile(plotDir + 'SUSY_%s_eff_pt_eta_%s_FS.root'%(mode,ID)).Get('eff')
+    f_in_fast = rt.TFile(plotDir + 'SUSY_%s_eff_pt_eta_%s_FastSim.root'%(mode,ID)).Get('eff')
+
+    if yr == 18:
+        ID = ID.replace('2017','2018')
+
+    f_in_full = rt.TFile(plotDir + 'SUSY_%s_eff_pt_eta_%s_FullSim.root'%(mode,ID)).Get('eff')
 
     h_in_full = f_in_full.GetPrimitive('eta_pass')
     h_in_fast = f_in_fast.GetPrimitive('eta_pass')
@@ -411,15 +445,15 @@ def computeSFs2D(mode, ID):
     c_sf = rt.TCanvas('sf','sf'); c_sf.cd()
     h_in_full.SetTitle(';p_{T} [GeV]; |#eta|; FullSim/FastSim')
     h_in_full.Draw('colztextE')
-    pf.showlumi('SF_'+re.sub('Run2017_','',ID))
+    pf.showlumi('SF_'+re.sub('Run201._','',ID))
 #    pf.showlogo('CMS')
     c_sf.SetLogx()
 #    c_sf.SetGridx(0)
     c_sf.Modified(); c_sf.Update()
     save(c_sf, 'pt_eta', 'SUSY', mode, ID) 
-#####################################################################################################
+##################################################################################################################################################################################################
                                     #####  IDs  #####                           
-#####################################################################################################
+##################################################################################################################################################################################################
 ###  SUSY ELECTRON IDS
 '''
 CutBased Veto ID V1 (no iso)                                    Reco electrons  SF  Run2017_CutBasedVetoNoIso94XV1
@@ -454,9 +488,9 @@ ConvVeto + MissHits < 2                                         MVA Tight ID + I
 
 3ChargeAgreement                                                MVA Tight ID + ID Emu + TightIP2D + TightIP3D + ConvVeto + MissHits = 0 SF  Run2017_3Qagree
 '''
-#####################################################################################################
+##################################################################################################################################################################################################
 
-#####################################################################################################
+##################################################################################################################################################################################################
 ###  SUSY MUON IDS
 '''
 miniIso02_LooseId              Mini Iso < 0.2                  Loose ID        
@@ -478,9 +512,9 @@ LeptonMVAM_MediumPrompt        Lepton MVA M  + miniIso04       MediumPrompt ID
 LeptonMVAT_MediumPrompt        Lepton MVA T  + miniIso04       MediumPrompt ID     
 LeptonMVAVT_MediumPrompt       Lepton MVA VT + miniIso04       MediumPrompt ID     
 '''
-#####################################################################################################
+##################################################################################################################################################################################################
                                     ##### utilities #####                           
-#####################################################################################################
+##################################################################################################################################################################################################
 def save(knvs, lbl_str, sample='', ch='', rmrk=''):
     knvs.GetFrame().SetLineWidth(0)
     knvs.Modified(); knvs.Update()
@@ -492,6 +526,6 @@ def save(knvs, lbl_str, sample='', ch='', rmrk=''):
         knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.png' .format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
         knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.pdf' .format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
         knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.root'.format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
-#####################################################################################################
+##################################################################################################################################################################################################
 
-#####################################################################################################
+##################################################################################################################################################################################################
