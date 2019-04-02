@@ -197,25 +197,32 @@ eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits = {
 eleIDs = dict(eleIDs_reco.items() + eleIDs_mvaVLooseTightIP2D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits.items())
 ##################################################################################################################################################################################################
 muonIDs_Loose = {
-    'miniIso04_LooseId'         :   'Probe_passMiniIsoL == 1',
-    'miniIso02_LooseId'         :   'Probe_passMiniIsoM == 1',  
-    'MultiIsoL_LooseId'         :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_LooseId'         :   'Probe_passMultiIsoM == 1',}
+    'miniIso04_LooseId'                     :   'Probe_passMiniIsoL == 1',
+    'miniIso02_LooseId'                     :   'Probe_passMiniIsoM == 1',  
+    'miniIso01_LooseId'                     :   'Probe_passMiniIsoT == 1',  
+    'MultiIsoL_LooseId'                     :   'Probe_passMultiIsoL == 1',
+    'MultiIsoM_LooseId'                     :   'Probe_passMultiIsoM == 1',
+    'MultiIsoM_17data_V32JEC_LooseId'       :   'Probe_passMultiIsoM2017v2 == 1',}
+
 
 muonIDs_Medium = {
-    'miniIso04_MediumId'        :   'Probe_passMiniIsoL == 1',
-    'miniIso02_MediumId'        :   'Probe_passMiniIsoM == 1',
-    'MultiIsoL_MediumId'        :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_MediumId'        :   'Probe_passMultiIsoM == 1',}
+    'miniIso04_MediumId'                    :   'Probe_passMiniIsoL == 1',
+    'miniIso02_MediumId'                    :   'Probe_passMiniIsoM == 1',
+    'miniIso01_MediumId'                    :   'Probe_passMiniIsoT == 1',
+    'MultiIsoL_MediumId'                    :   'Probe_passMultiIsoL == 1',
+    'MultiIsoM_MediumId'                    :   'Probe_passMultiIsoM == 1',
+    'MultiIsoM_17data_V32JEC_MediumId'      :   'Probe_passMultiIsoM2017v2 == 1',}
 
-muonIDs_MediumPrompt = {
-    'miniIso04_MediumPrompt'    :   'Probe_passMiniIsoL == 1',
-    'miniIso02_MediumPrompt'    :   'Probe_passMiniIsoL == 1',
-    'MultiIsoL_MediumPrompt'    :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_MediumPrompt'    :   'Probe_passMultiIsoM == 1',
-    'LeptonMVAL_MediumPrompt'   :   'Probe_passMVAL == 1 && Probe_passMiniIsoL == 1',
-    'LeptonMVAM_MediumPrompt'   :   'Probe_passMVAM == 1 && Probe_passMiniIsoL == 1',
-    'LeptonMVAT_MediumPrompt'   :   'Probe_passMVAT == 1 && Probe_passMiniIsoL == 1',
+muonIDs_MediumPrompt = {              
+    'miniIso04_MediumPrompt'                :   'Probe_passMiniIsoL == 1',
+    'miniIso02_MediumPrompt'                :   'Probe_passMiniIsoM == 1',
+    'miniIso01_MediumPrompt'                :   'Probe_passMiniIsoT == 1',
+    'MultiIsoL_MediumPrompt'                :   'Probe_passMultiIsoL == 1',
+    'MultiIsoM_MediumPrompt'                :   'Probe_passMultiIsoM == 1',
+    'MultiIsoM_17data_V32JEC_MediumPrompt'  :   'Probe_passMultiIsoM2017v2 == 1',
+    'LeptonMVAL_MediumPrompt'               :   'Probe_passMVAL == 1 && Probe_passMiniIsoL == 1',
+    'LeptonMVAM_MediumPrompt'               :   'Probe_passMVAM == 1 && Probe_passMiniIsoL == 1',
+    'LeptonMVAT_MediumPrompt'               :   'Probe_passMVAT == 1 && Probe_passMiniIsoL == 1',
 #    'LeptonMVAVT_MediumPrompt'  :   'Probe_passMVAVT == 1 && Probe_passMiniIsoL == 1',
 }
 muonIDs = dict(muonIDs_Loose.items() + muonIDs_Medium.items() + muonIDs_MediumPrompt.items())
@@ -282,9 +289,16 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
             f_all = df.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
 
     if mode == 'mu':
-        inFileDYtmp = 'DY_MG_Muon_FS.root' if FAST else 'DY_IDK_MUON_IDK.root'
-        fin = rt.TFile(inFileDYtmp)
-        t = fin.Get('Events')
+        if FAST == False:
+            inFileDYtmp = 'DY_IDK_MUON_IDK.root'
+            fin = rt.TFile(inFileDYtmp)
+            t = fin.Get('Events')
+        if FAST == True:
+            t = rt.TChain('Events')
+            files = glob('*Muon*_FastSim*.root')
+            for f in files:
+                t.Add(f)
+            print t.GetEntries()
         IDs = muonIDs
  
         if FAST == False:
@@ -444,6 +458,7 @@ def computeSFs2D(mode, ID, yr):
 
     c_sf = rt.TCanvas('sf','sf'); c_sf.cd()
     h_in_full.SetTitle(';p_{T} [GeV]; |#eta|; FullSim/FastSim')
+    h_in_full.SetAxisRange(0.8,1.2,'Z')
     h_in_full.Draw('colztextE')
     pf.showlumi('SF_'+re.sub('Run201._','',ID))
 #    pf.showlogo('CMS')
