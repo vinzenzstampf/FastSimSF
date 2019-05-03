@@ -29,12 +29,18 @@ plotDir     = '/t3home/vstampf/eos/plots/SF/'
 l_pt  = [5.0, 10.0, 20.0, 35.0, 50.0, 100.0, 200.0, 500.0]
 b_pt  = np.array(l_pt)
 
-l_eta = [0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
-b_eta = np.array(l_eta)
+### electrons
+l_eta_ele = [0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
+l_eta_ele = [-2.500, -2.000, -1.566, -1.444, -0.8, 0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
+### muons
+l_eta_mu = [0.0, 0.9, 1.2, 2.1, 2.4]
+
+b_eta_mu  = np.array(l_eta_mu)
+b_eta_ele = np.array(l_eta_ele)
 l_eta_tag = ['00t08', '08t14', '14t16', '16t20', '20t25']    
 
-b_y1    = np.arange(0.,1.,0.1)
-b_y2    = np.arange(0.,2.5,0.1)
+b_y1 = np.arange(0.,1.,0.1)
+b_y2 = np.arange(0.,2.5,0.1)
 
 eff_framer = rt.TH2F('','',len(b_pt)-1,b_pt,len(b_y1)-1,b_y1)
 eff_framer.GetYaxis().SetRangeUser(0.25, 1.0)
@@ -197,32 +203,37 @@ eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits = {
 eleIDs = dict(eleIDs_reco.items() + eleIDs_mvaVLooseTightIP2D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits.items())
 ##################################################################################################################################################################################################
 muonIDs_Loose = {
-    'miniIso04_LooseId'                     :   'Probe_passMiniIsoL == 1',
-    'miniIso02_LooseId'                     :   'Probe_passMiniIsoM == 1',  
-    'miniIso01_LooseId'                     :   'Probe_passMiniIsoT == 1',  
-    'MultiIsoL_LooseId'                     :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_LooseId'                     :   'Probe_passMultiIsoM == 1',
-    'MultiIsoM_17data_V32JEC_LooseId'       :   'Probe_passMultiIsoM2017v2 == 1',}
+#    'miniIso04_LooseId'                     :   'Probe_passMiniIsoL == 1',
+#    'miniIso02_LooseId'                     :   'Probe_passMiniIsoM == 1',  
+#    'miniIso01_LooseId'                     :   'Probe_passMiniIsoT == 1',  
+    'miniIso005_LooseId'                     :   'Probe_passMiniIsoVT == 1',  
+#    'MultiIsoL_LooseId'                     :   'Probe_passMultiIsoL == 1',
+#    'MultiIsoM_LooseId'                     :   'Probe_passMultiIsoM == 1',
+#    'MultiIsoM_17data_V32JEC_LooseId'       :   'Probe_passMultiIsoM2017v2 == 1',
+}
 
 
 muonIDs_Medium = {
-    'miniIso04_MediumId'                    :   'Probe_passMiniIsoL == 1',
-    'miniIso02_MediumId'                    :   'Probe_passMiniIsoM == 1',
-    'miniIso01_MediumId'                    :   'Probe_passMiniIsoT == 1',
-    'MultiIsoL_MediumId'                    :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_MediumId'                    :   'Probe_passMultiIsoM == 1',
-    'MultiIsoM_17data_V32JEC_MediumId'      :   'Probe_passMultiIsoM2017v2 == 1',}
+#    'miniIso04_MediumId'                    :   'Probe_passMiniIsoL == 1',
+#    'miniIso02_MediumId'                    :   'Probe_passMiniIsoM == 1',
+#    'miniIso01_MediumId'                    :   'Probe_passMiniIsoT == 1',
+    'miniIso005_MediumId'                    :   'Probe_passMiniIsoVT == 1',
+#    'MultiIsoL_MediumId'                    :   'Probe_passMultiIsoL == 1',
+#    'MultiIsoM_MediumId'                    :   'Probe_passMultiIsoM == 1',
+#    'MultiIsoM_17data_V32JEC_MediumId'      :   'Probe_passMultiIsoM2017v2 == 1',
+}
 
 muonIDs_MediumPrompt = {              
-    'miniIso04_MediumPrompt'                :   'Probe_passMiniIsoL == 1',
-    'miniIso02_MediumPrompt'                :   'Probe_passMiniIsoM == 1',
-    'miniIso01_MediumPrompt'                :   'Probe_passMiniIsoT == 1',
-    'MultiIsoL_MediumPrompt'                :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_MediumPrompt'                :   'Probe_passMultiIsoM == 1',
-    'MultiIsoM_17data_V32JEC_MediumPrompt'  :   'Probe_passMultiIsoM2017v2 == 1',
-    'LeptonMVAL_MediumPrompt'               :   'Probe_passMVAL == 1 && Probe_passMiniIsoL == 1',
-    'LeptonMVAM_MediumPrompt'               :   'Probe_passMVAM == 1 && Probe_passMiniIsoL == 1',
-    'LeptonMVAT_MediumPrompt'               :   'Probe_passMVAT == 1 && Probe_passMiniIsoL == 1',
+#    'miniIso04_MediumPrompt'                :   'Probe_passMiniIsoL == 1',
+#    'miniIso02_MediumPrompt'                :   'Probe_passMiniIsoM == 1',
+#    'miniIso01_MediumPrompt'                :   'Probe_passMiniIsoT == 1',
+    'miniIso005_MediumPrompt'               :   'Probe_passMiniIsoVT == 1',
+#    'MultiIsoL_MediumPrompt'                :   'Probe_passMultiIsoL == 1',
+#    'MultiIsoM_MediumPrompt'                :   'Probe_passMultiIsoM == 1',
+#    'MultiIsoM_17data_V32JEC_MediumPrompt'  :   'Probe_passMultiIsoM2017v2 == 1',
+#    'LeptonMVAL_MediumPrompt'               :   'Probe_passMVAL == 1 && Probe_passMiniIsoL == 1',
+#    'LeptonMVAM_MediumPrompt'               :   'Probe_passMVAM == 1 && Probe_passMiniIsoL == 1',
+#    'LeptonMVAT_MediumPrompt'               :   'Probe_passMVAT == 1 && Probe_passMiniIsoL == 1',
 #    'LeptonMVAVT_MediumPrompt'  :   'Probe_passMVAVT == 1 && Probe_passMiniIsoL == 1',
 }
 muonIDs = dict(muonIDs_Loose.items() + muonIDs_Medium.items() + muonIDs_MediumPrompt.items())
@@ -255,7 +266,8 @@ def getSF(mode='ele',yr=17):
 ##################################################################################################################################################################################################
 def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
  
-     
+    if mode == 'mu':  b_eta = b_eta_mu 
+    if mode == 'ele': b_eta = b_eta_ele 
     cuts_all  = None
     cuts_pass = None
     eta_cut   = None
@@ -282,23 +294,23 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
 #            cuts_all += ' && tag_Ele_trigMVA > 0.92 && sqrt( 2*mpfMET*tag_Ele_pt*(1-cos(mpfPhi-tag_Ele_phi))) < 45'
 
         lep_pt   = 'el_pt'
-        lep_eta  = 'abs_el_sc_eta'
+        #lep_eta  = 'abs_el_sc_eta'
+        lep_eta  = 'el_sc_eta'
         
         if RDF == True:
             df = rdf(t)
-            f_all = df.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
+            #f_all = df.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
 
     if mode == 'mu':
-        if FAST == False:
-            inFileDYtmp = 'DY_IDK_MUON_IDK.root'
-            fin = rt.TFile(inFileDYtmp)
-            t = fin.Get('Events')
-        if FAST == True:
-            t = rt.TChain('Events')
-            files = glob('*Muon*_FastSim*.root')
-            for f in files:
-                t.Add(f)
-            print t.GetEntries()
+        if FAST == False: MODE = 'full'
+        if FAST == True:  MODE = 'fast'
+        inDir = '/t3home/vstampf/eos/ntuples/scalefactors/TnP_Muon_trees_%s_%s/' %(yr,MODE)
+        set_trace()
+        files = glob(inDir+'*.root')
+        t = rt.TChain('Events')
+        for f in files:
+            t.Add(f)
+        print '\n\t', t.GetEntries()
         IDs = muonIDs
  
         if FAST == False:
@@ -390,8 +402,13 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         if RDF == True:
             df_pass = df_all.Filter(IDs[ID])
 
-            h_all_ptr  = df_all .Histo2D(('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
-            h_pass_ptr = df_pass.Histo2D(('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
+            if mode == 'mu': 
+                h_all_ptr  = df_all .Histo2D(('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
+                h_pass_ptr = df_pass.Histo2D(('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta), lep_pt, lep_eta) 
+
+            if mode == 'ele': 
+                h_all_ptr  = df_all .Histo2D(('eta_all', 'eta_all' ,len(b_eta)-1,b_eta,len(b_pt)-1,b_pt), lep_eta, lep_pt) 
+                h_pass_ptr = df_pass.Histo2D(('eta_pass','eta_pass',len(b_eta)-1,b_eta,len(b_pt)-1,b_pt), lep_eta, lep_pt) 
 
             h_all  = h_all_ptr.GetPtr()
             h_pass = h_pass_ptr.GetPtr()
@@ -399,8 +416,13 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         if RDF == False:
             filtr_pass = filtr_all + ' && ' + IDs[ID]
 
-            h_all  = rt.TH2F('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
-            h_pass = rt.TH2F('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
+            if mode == 'mu': 
+                h_all  = rt.TH2F('eta_all', 'eta_all', len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
+                h_pass = rt.TH2F('eta_pass','eta_pass',len(b_pt)-1,b_pt,len(b_eta)-1,b_eta)
+
+            if mode == 'ele': 
+                h_all  = rt.TH2F('eta_all', 'eta_all', len(b_eta)-1,b_eta,len(b_pt)-1,b_pt)
+                h_pass = rt.TH2F('eta_pass','eta_pass',len(b_eta)-1,b_eta,len(b_pt)-1,b_pt)
 
 #            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , '( ' + cuts_all + ' && ' + filtr_all  + ' ) * ( 2 * (truePU>=20) + 1 * (truePU<20) )' )
 #            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', '( ' + cuts_all + ' && ' + filtr_pass + ' ) * ( 2 * (truePU>=20) + 1 * (truePU<20) )' )
@@ -413,8 +435,11 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
                 CUTS_ALL  = (cuts_all + ' && ' + filtr_all ).replace('el_MVA94Xnoiso','el_noIsoMVA94X')
                 CUTS_PASS = (cuts_all + ' && ' + filtr_pass).replace('el_MVA94Xnoiso','el_noIsoMVA94X')
 
-            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , CUTS_ALL)
-            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', CUTS_PASS)
+#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , CUTS_ALL)
+#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', CUTS_PASS)
+
+            t.Draw( 'el_pt:el_sc_eta>>eta_all' , CUTS_ALL)
+            t.Draw( 'el_pt:el_sc_eta>>eta_pass', CUTS_PASS)
 
         if yr == 18:
             ID = ID.replace('2017','2018')
@@ -428,12 +453,20 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         h_pass.Divide(h_all)
 
         c_eff = rt.TCanvas('eff','eff'); c_eff.cd()
-        c_eff.SetLogx()
-        h_pass.SetTitle(';Lepton p_{T} [GeV]; |#eta|; Efficiency')
+        if mode == 'mu': 
+            c_eff.SetLogx()
+            h_pass.SetTitle(';Lepton p_{T} [GeV]; |#eta|; Efficiency')
+        if mode == 'ele': 
+            c_eff.SetLogy()
+            h_pass.SetTitle(';super-cluster-#eta; Lepton p_{T} [GeV]; Efficiency')
         h_pass.Draw('colztextE')
         h_pass.SetAxisRange(0.,1.,'Z')
-        h_pass.GetXaxis().SetNoExponent()
-        h_pass.GetXaxis().SetMoreLogLabels()
+        if mode == 'mu':  
+            h_pass.GetXaxis().SetNoExponent()
+            h_pass.GetXaxis().SetMoreLogLabels()
+        if mode == 'ele':  
+            h_pass.GetYaxis().SetNoExponent()
+            h_pass.GetYaxis().SetMoreLogLabels()
 #            pf.showlogo('CMS')
         pf.showlumi(re.sub('Run201._','',ID + '_FastSim' if FAST else ID + '_FullSim'))
     #    c_eff.SetGridx(0)
@@ -457,12 +490,16 @@ def computeSFs2D(mode, ID, yr):
     h_in_full.Divide(h_in_fast)
 
     c_sf = rt.TCanvas('sf','sf'); c_sf.cd()
-    h_in_full.SetTitle(';p_{T} [GeV]; |#eta|; FullSim/FastSim')
+    if mode == 'mu':
+        h_in_full.SetTitle(';p_{T} [GeV]; |#eta|; FullSim/FastSim')
+        c_sf.SetLogx()
+    if mode == 'ele':
+        h_in_full.SetTitle(';super-cluster-#eta; p_{T} [GeV]; FullSim/FastSim')
+        c_sf.SetLogy()
     h_in_full.SetAxisRange(0.8,1.2,'Z')
     h_in_full.Draw('colztextE')
     pf.showlumi('SF_'+re.sub('Run201._','',ID))
 #    pf.showlogo('CMS')
-    c_sf.SetLogx()
 #    c_sf.SetGridx(0)
     c_sf.Modified(); c_sf.Update()
     save(c_sf, 'pt_eta', 'SUSY', mode, ID) 
