@@ -42,8 +42,8 @@ b_eta_mu  = np.array(l_eta_mu)
 b_eta_ele = np.array(l_eta_ele)
 l_eta_tag = ['00t08', '08t14', '14t16', '16t20', '20t25']    
 
-b_y1    = np.arange(0.,1.,0.1)
-b_y2    = np.arange(0.,2.5,0.1)
+b_y1 = np.arange(0.,1.,0.1)
+b_y2 = np.arange(0.,2.5,0.1)
 
 eff_framer = rt.TH2F('','',len(b_pt)-1,b_pt,len(b_y1)-1,b_y1)
 eff_framer.GetYaxis().SetRangeUser(0.25, 1.0)
@@ -206,38 +206,38 @@ eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits = {
 eleIDs = dict(eleIDs_reco.items() + eleIDs_mvaVLooseTightIP2D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3D.items() + eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits.items())
 ##################################################################################################################################################################################################
 muonIDs_Loose = {
-    'miniIso04_LooseId'                      :   'Probe_passMiniIsoL == 1',
-    'miniIso02_LooseId'                      :   'Probe_passMiniIsoM == 1',  
-    'miniIso01_LooseId'                      :   'Probe_passMiniIsoT == 1',  
+#    'miniIso04_LooseId'                     :   'Probe_passMiniIsoL == 1',
+#    'miniIso02_LooseId'                     :   'Probe_passMiniIsoM == 1',  
+#    'miniIso01_LooseId'                     :   'Probe_passMiniIsoT == 1',  
     'miniIso005_LooseId'                     :   'Probe_passMiniIsoVT == 1',  
-    'MultiIsoL_LooseId'                      :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_LooseId'                      :   'Probe_passMultiIsoM == 1',
-    'MultiIsoM_17data_V32JEC_LooseId'        :   'Probe_passMultiIsoM2017v2 == 1',}
-
+#    'MultiIsoL_LooseId'                     :   'Probe_passMultiIsoL == 1',
+#    'MultiIsoM_LooseId'                     :   'Probe_passMultiIsoM == 1',
+#    'MultiIsoM_17data_V32JEC_LooseId'       :   'Probe_passMultiIsoM2017v2 == 1',
+}
 
 
 muonIDs_Medium = {
-    'miniIso04_MediumId'                     :   'Probe_passMiniIsoL == 1',
-    'miniIso02_MediumId'                     :   'Probe_passMiniIsoM == 1',
-    'miniIso01_MediumId'                     :   'Probe_passMiniIsoT == 1',
+#    'miniIso04_MediumId'                    :   'Probe_passMiniIsoL == 1',
+#    'miniIso02_MediumId'                    :   'Probe_passMiniIsoM == 1',
+#    'miniIso01_MediumId'                    :   'Probe_passMiniIsoT == 1',
     'miniIso005_MediumId'                    :   'Probe_passMiniIsoVT == 1',
-    'MultiIsoL_MediumId'                     :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_MediumId'                     :   'Probe_passMultiIsoM == 1',
-    'MultiIsoM_17data_V32JEC_MediumId'       :   'Probe_passMultiIsoM2017v2 == 1',}
-
+#    'MultiIsoL_MediumId'                    :   'Probe_passMultiIsoL == 1',
+#    'MultiIsoM_MediumId'                    :   'Probe_passMultiIsoM == 1',
+#    'MultiIsoM_17data_V32JEC_MediumId'      :   'Probe_passMultiIsoM2017v2 == 1',
+}
 
 muonIDs_MediumPrompt = {              
-    'miniIso04_MediumPrompt'                 :   'Probe_passMiniIsoL == 1',
-    'miniIso02_MediumPrompt'                 :   'Probe_passMiniIsoM == 1',
-    'miniIso01_MediumPrompt'                 :   'Probe_passMiniIsoT == 1',
-    'miniIso005_MediumPrompt'                :   'Probe_passMiniIsoVT == 1',
-    'MultiIsoL_MediumPrompt'                 :   'Probe_passMultiIsoL == 1',
-    'MultiIsoM_MediumPrompt'                 :   'Probe_passMultiIsoM == 1',
-    'MultiIsoM_17data_V32JEC_MediumPrompt'   :   'Probe_passMultiIsoM2017v2 == 1',
-    'LeptonMVAL_MediumPrompt'                :   'Probe_passMVAL == 1 && Probe_passMiniIsoL == 1',
-    'LeptonMVAM_MediumPrompt'                :   'Probe_passMVAM == 1 && Probe_passMiniIsoL == 1',
-    'LeptonMVAT_MediumPrompt'                :   'Probe_passMVAT == 1 && Probe_passMiniIsoL == 1',
-#    'LeptonMVAVT_MediumPrompt'               :   'Probe_passMVAVT == 1 && Probe_passMiniIsoL == 1',
+#    'miniIso04_MediumPrompt'                :   'Probe_passMiniIsoL == 1',
+#    'miniIso02_MediumPrompt'                :   'Probe_passMiniIsoM == 1',
+#    'miniIso01_MediumPrompt'                :   'Probe_passMiniIsoT == 1',
+    'miniIso005_MediumPrompt'               :   'Probe_passMiniIsoVT == 1',
+#    'MultiIsoL_MediumPrompt'                :   'Probe_passMultiIsoL == 1',
+#    'MultiIsoM_MediumPrompt'                :   'Probe_passMultiIsoM == 1',
+#    'MultiIsoM_17data_V32JEC_MediumPrompt'  :   'Probe_passMultiIsoM2017v2 == 1',
+#    'LeptonMVAL_MediumPrompt'               :   'Probe_passMVAL == 1 && Probe_passMiniIsoL == 1',
+#    'LeptonMVAM_MediumPrompt'               :   'Probe_passMVAM == 1 && Probe_passMiniIsoL == 1',
+#    'LeptonMVAT_MediumPrompt'               :   'Probe_passMVAT == 1 && Probe_passMiniIsoL == 1',
+#    'LeptonMVAVT_MediumPrompt'  :   'Probe_passMVAVT == 1 && Probe_passMiniIsoL == 1',
 }
 muonIDs = dict(muonIDs_Loose.items() + muonIDs_Medium.items() + muonIDs_MediumPrompt.items())
 ##################################################################################################################################################################################################

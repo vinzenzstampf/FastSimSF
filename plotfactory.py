@@ -232,6 +232,9 @@ def setpfstyle():
     # pfstyle.SetFillColor(0) # White
     # pfstyle.SetfillStyle(4000) # Transparent
    
+    # for 'colztexte' restrict digits after comma
+    pfstyle.SetPaintTextFormat('4.2f')
+
     #Statistics
     pfstyle.SetOptFit(111)
     pfstyle.SetStatX(.80)
