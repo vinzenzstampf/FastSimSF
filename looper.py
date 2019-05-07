@@ -281,11 +281,14 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
     print'\n\tFastSim:', FAST
 
     if mode == 'ele':
-        if yr == 17:
-            inFileDYtmp = 'DY_MG_EGamma_17_FastSim.root' if FAST else 'DY_MG_EGamma_17_FullSim.root'
-        if yr == 18:
-            inFileDYtmp = '' if FAST else 'DY_MG_EGamma_18_FullSim.root'
-        fin = rt.TFile(inFileDYtmp)
+        if FAST == False: MODE = 'full'
+        if FAST == True:  MODE = 'fast'
+        inDir = eos+'/ntuples/scalefactors/TnP_EGamma_trees_%s_%s/' %(yr,MODE)
+        files = glob(inDir+'*.root')
+        t = rt.TChain('Events')
+        for f in files:
+            t.Add(f)
+        print '\n\tentries:', t.GetEntries()
         tFile = fin.Get('tnpEleIDs')
         t = tFile.Get('fitter_tree')
         IDs = eleIDs
