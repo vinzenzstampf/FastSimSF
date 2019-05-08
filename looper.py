@@ -283,14 +283,11 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
     if mode == 'ele':
         if FAST == False: MODE = 'full'
         if FAST == True:  MODE = 'fast'
-        inDir = eos+'/ntuples/scalefactors/TnP_EGamma_trees_%s_%s/' %(yr,MODE)
-        files = glob(inDir+'*.root')
-        t = rt.TChain('Events')
-        for f in files:
-            t.Add(f)
+        inFile = glob(eos+'/ntuples/scalefactors/TnP_EGamma_trees_%s_%s/*.root'%(yr,MODE))[0] 
+        tFile = rt.TFile(inFile)
+        tDir = tFile.Get('tnpEleIDs')
+        t = tDir.Get('fitter_tree')
         print '\n\tentries:', t.GetEntries()
-        tFile = fin.Get('tnpEleIDs')
-        t = tFile.Get('fitter_tree')
         IDs = eleIDs
  
         cuts_all =  'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && mcTrue == 1 && abs(mass - 91.19) < 30 && el_q * tag_Ele_q < 0' 
@@ -305,7 +302,7 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         
         if RDF == True:
             df = rdf(t)
-            #f_all = df.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
+            f_all = df#.Filter(cuts_all).Define('abs_el_sc_eta', 'abs(el_sc_eta)')
 
     if mode == 'mu':
         if FAST == False: MODE = 'full'
@@ -345,7 +342,7 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
 
 
     for ID in IDs.keys():#[:1]:
-        filtr_all = '1'
+        filtr_all = '1 == 1'
 
         if ID in eleIDs:
             ## special IDs
@@ -481,7 +478,11 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
 
 ##################################################################################################################################################################################################
 def computeSFs2D(mode, ID, yr): 
-    
+
+    if mode == 'ele':    
+        if yr == 18:
+            ID = ID.replace('2017','2018')
+
     f_in_fast = rt.TFile(plotDir + 'SUSY_%s_eff_pt_eta_%s_FastSim.root'%(mode,ID)).Get('eff')
 
     if yr == 18:
