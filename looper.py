@@ -284,6 +284,7 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         if FAST == False: MODE = 'full'
         if FAST == True:  MODE = 'fast'
         inFile = glob(eos+'/ntuples/scalefactors/TnP_EGamma_trees_%s_%s/*.root'%(yr,MODE))[0] 
+        print '\n\tinDiri:', inFile
         tFile = rt.TFile(inFile)
         tDir = tFile.Get('tnpEleIDs')
         t = tDir.Get('fitter_tree')
@@ -308,6 +309,7 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         if FAST == False: MODE = 'full'
         if FAST == True:  MODE = 'fast'
         inDir = eos+'/ntuples/scalefactors/TnP_Muon_trees_%s_%s/' %(yr,MODE)
+        print '\n\tinDiri:', inDir
         files = glob(inDir+'*.root')
         t = rt.TChain('Events')
         for f in files:
@@ -340,15 +342,23 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
 
     print '\n\tcuts_all: %s\n' %cuts_all
 
+    repl = 'el_noIsoMVA94X' if yr == 18 else 'el_MVA94Xnoiso'
+    for ID in IDs.keys(): IDs[ID]                            = IDs[ID]                                                .replace('el_MVA94Xnoiso',repl)
+    cutBase_mvaVLooseTightIP2D                               = CutBase_mvaVLooseTightIP2D                             .replace('el_MVA94Xnoiso',repl)
+    cutBase_mvaTightIDEmuTightIP2DTightIP3D                  = CutBase_mvaTightIDEmuTightIP2DTightIP3D                .replace('el_MVA94Xnoiso',repl)
+    cutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits  = CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits.replace('el_MVA94Xnoiso',repl)
+    mva_Tight                                                = mvaTight                                               .replace('el_MVA94Xnoiso',repl)
 
     for ID in IDs.keys():#[:1]:
         filtr_all = '1 == 1'
+
+        #set_trace()
 
         if ID in eleIDs:
             ## special IDs
             ### wrt MVA VLoose ID + TightIP2D, 'passingMVAVLoose == 1 && passingTightIP2D == 1'
             if ID in eleIDs_mvaVLooseTightIP2D:
-                filtr_all = IDs['Run2017_MVAVLooseIP2D'] + ' && ' + CutBase_mvaVLooseTightIP2D
+                filtr_all = IDs['Run2017_MVAVLooseIP2D'] + ' && ' + cutBase_mvaVLooseTightIP2D
                 if RDF == True:
                     df_all = f_all.Filter(filtr_all)
 
@@ -356,7 +366,7 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
             if ID in eleIDs_mvaTightIDEmuTightIP2DTightIP3D:
                 # df_all = f_all.Filter('passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1')
                 # 3/6/19 gio: mvaTight is new
-                filtr_all = mvaTight + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && ' + CutBase_mvaTightIDEmuTightIP2DTightIP3D
+                filtr_all = mva_Tight + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && ' + cutBase_mvaTightIDEmuTightIP2DTightIP3D
                 if RDF == True:
                     df_all = f_all.Filter(filtr_all) 
 
@@ -365,8 +375,8 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
             if ID in eleIDs_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits:
                 # df_all  = f_all.Filter('passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0')
                 # 3/6/19 gio: mvaTight is new
-                filtr_all = mvaTight + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0' \
-                                       ' && ' + CutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits  
+                filtr_all = mva_Tight + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1 && passingConvVeto == 1 && el_mHits == 0' \
+                                       ' && ' + cutBase_mvaTightIDEmuTightIP2DTightIP3DConvVetoMissHits  
                 if RDF == True:
                     df_all  = f_all.Filter(filtr_all)
                     
@@ -426,19 +436,8 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
                 h_all  = rt.TH2F('eta_all', 'eta_all', len(b_eta)-1,b_eta,len(b_pt)-1,b_pt)
                 h_pass = rt.TH2F('eta_pass','eta_pass',len(b_eta)-1,b_eta,len(b_pt)-1,b_pt)
 
-#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , '( ' + cuts_all + ' && ' + filtr_all  + ' ) * ( 2 * (truePU>=20) + 1 * (truePU<20) )' )
-#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', '( ' + cuts_all + ' && ' + filtr_pass + ' ) * ( 2 * (truePU>=20) + 1 * (truePU<20) )' )
-
-            if yr == 17:
-                CUTS_ALL  = cuts_all + ' && ' + filtr_all 
-                CUTS_PASS = cuts_all + ' && ' + filtr_pass
-
-            if yr == 18:
-                CUTS_ALL  = (cuts_all + ' && ' + filtr_all ).replace('el_MVA94Xnoiso','el_noIsoMVA94X')
-                CUTS_PASS = (cuts_all + ' && ' + filtr_pass).replace('el_MVA94Xnoiso','el_noIsoMVA94X')
-
-#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_all' , CUTS_ALL)
-#            t.Draw( 'abs(el_sc_eta):el_pt>>eta_pass', CUTS_PASS)
+            CUTS_ALL  = cuts_all + ' && ' + filtr_all 
+            CUTS_PASS = cuts_all + ' && ' + filtr_pass
 
             t.Draw( 'el_pt:el_sc_eta>>eta_all' , CUTS_ALL)
             t.Draw( 'el_pt:el_sc_eta>>eta_pass', CUTS_PASS)
@@ -509,6 +508,38 @@ def computeSFs2D(mode, ID, yr):
 #    c_sf.SetGridx(0)
     c_sf.Modified(); c_sf.Update()
     save(c_sf, 'pt_eta', 'SUSY', mode, ID) 
+##################################################################################################################################################################################################
+
+##################################################################################################################################################################################################
+def checkPU(): 
+
+    inFiles = glob(eos+'/ntuples/scalefactors/TnP_EGamma_trees_*/*.root')
+    print '\n\tinDirs:', inFiles
+
+    for inFile in inFiles:#[:1]:
+
+        if '_v' in inFile: continue
+
+        tFile = rt.TFile(inFile)
+        print '\n\tinDir:', inFile
+        tDir = tFile.Get('tnpEleIDs')
+        t = tDir.Get('fitter_tree')
+        print '\n\tentries:', t.GetEntries()
+
+        h = rt.TH1F('n_vtx', 'n_vtx', 100, 0., 100)
+
+        t.Draw('truePU>>n_vtx')
+
+        mode = 'fast' if 'fast' in inFile else 'full'
+        year = '17'   if '17'   in inFile else '18'
+       
+        c = rt.TCanvas('nvtx','nvtx'); c.cd()
+        h.SetTitle(';number of vertices')
+        h.Draw()
+        pf.showlumi('truePU_'+mode+'_'+year)
+        pf.showlogo('CMS')
+        c.Modified(); c.Update()
+        save(c, 'truePU', 'SUSY', mode, year) 
 ##################################################################################################################################################################################################
                                     #####  IDs  #####                           
 ##################################################################################################################################################################################################
