@@ -7,6 +7,7 @@ import numpy as np
 import plotfactory as pf
 from glob import glob
 import sys
+from datetime import datetime
 from pdb import set_trace
 from copy import deepcopy
 from os.path import normpath, basename, split
@@ -22,6 +23,9 @@ import os
 #from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
 pf.setpfstyle()
 ##################################################################################################################################################################################################
+today   = datetime.now()
+date    = today.strftime('%y%m%d')
+##################################################################################################################################################################################################
 eos          = '/eos/user/v/vstampf/'
 if platform.platform() == 'Linux-2.6.32-754.3.5.el6.x86_64-x86_64-with-redhat-6.6-Carbon':
    eos       = '/t3home/vstampf/eos/'
@@ -29,18 +33,25 @@ plotDir      = eos+'/plots/SF/'
 ##################################################################################################################################################################################################
                                     ##### histos #####                           
 ##################################################################################################################################################################################################
-l_pt  = [5.0, 10.0, 20.0, 35.0, 50.0, 100.0, 200.0, 500.0]
-b_pt  = np.array(l_pt)
+l_pt       = [10.0, 20.0, 35.0, 50.0, 100.0, 200.0, 500.0]
+l_pt_low   = [10.0, 20.0, 35.0, 50.0, 100.0, 500.0]
+l_pt_vlow  = [10.0, 20.0, 100.0, 500.0]
+
+b_pt_std  = np.array(l_pt)
+b_pt_low  = np.array(l_pt_low)
+#b_pt_vlow = np.array(l_pt_vlow)
+b_pt = b_pt_std
 
 ### electrons
-l_eta_ele = [0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
-l_eta_ele = [-2.500, -2.000, -1.566, -1.444, -0.8, 0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
+l_eta_ele      = [0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
+l_eta_ele_low  = [-2.500, -1.444, -0.8, 0.0, 0.8, 1.444, 2.500]
+#l_eta_ele_vlow = [-2.500, -2.000, -1.566, -1.444, -0.8, 0.0, 0.8, 1.444, 1.566, 2.000, 2.500]
 ### muons
 l_eta_mu = [0.0, 0.9, 1.2, 2.1, 2.4]
 
-b_eta_mu  = np.array(l_eta_mu)
-b_eta_ele = np.array(l_eta_ele)
-l_eta_tag = ['00t08', '08t14', '14t16', '16t20', '20t25']    
+b_eta_mu      = np.array(l_eta_mu)
+b_eta_ele     = np.array(l_eta_ele)
+b_eta_ele_low = np.array(l_eta_ele_low) 
 
 b_y1    = np.arange(0.,1.,0.1)
 b_y2    = np.arange(0.,2.5,0.1)
@@ -110,15 +121,6 @@ eleIDs_reco = {
     'Run2017_CutBasedLooseNoIso94XV2'                  : 'passingCutBasedLooseNoIso94XV2 == 1'  ,
     'Run2017_CutBasedMediumNoIso94XV2'                 : 'passingCutBasedMediumNoIso94XV2 == 1' ,
     'Run2017_CutBasedTightNoIso94XV2'                  : 'passingCutBasedTightNoIso94XV2 == 1'  ,
-
-#    'Run2017_MVAVLooseIP2D'                            : 'passingMVAVLoose == 1 && passingTightIP2D == 1',                                                                    #v0         
-#    'Run2017_MVAVLooseFOIP2DIDEmu'                     : 'passingMVAVLooseFO == 1 && passingIDEmu == 1 && passingTightIP2D == 1',                                             #v0 
-#    'Run2017_MVATightTightIP2D3D'                      : 'passingMVATight == 1 && passingTightIP2D == 1 && passingTightIP3D == 1'                                             #v0
-#    'Run2017_MVATightIP2D3DIDEmu'                      : 'passingMVATight == 1 && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',                       #v0               
-#    'Run2017_MVATightTightIP2D3D'                      :  mvaTight['passingMVATightNew2 == 1'] + ' && passingTightIP2D == 1 && passingTightIP3D == 1',                        #v1 added 3/6   
-#    'Run2017_MVATightIP2D3DIDEmu'                      :  mvaTight['passingMVATightNew2 == 1'] + ' && passingIDEmu == 1 && passingTightIP2D == 1 && passingTightIP3D == 1',   #v1 added 3/6 
-#    'Run2017_LeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04' : 'passingLeptonMvaVTIDEmuTightIP2DSIP3D8miniIso04 == 1',                                                              #v0             
-#    'Run2017_LeptonMvaMIDEmuTightIP2DSIP3D8miniIso04'  : 'passingLeptonMvaMIDEmuTightIP2DSIP3D8miniIso04 == 1',                                                               #v0            
 
     # https://github.com/vhegde91/egm_tnp_analysis/blob/LPC_Moriond18_v3.0/etc/config/settings_ele_wrtReco.py#L43
     # added 3/7
@@ -215,7 +217,6 @@ muonIDs_Loose = {
     'MultiIsoM_17data_V32JEC_LooseId'        :   'Probe_passMultiIsoM2017v2 == 1',}
 
 
-
 muonIDs_Medium = {
     'miniIso04_MediumId'                     :   'Probe_passMiniIsoL == 1',
     'miniIso02_MediumId'                     :   'Probe_passMiniIsoM == 1',
@@ -245,6 +246,10 @@ muonIDs = dict(muonIDs_Loose.items() + muonIDs_Medium.items() + muonIDs_MediumPr
 ##################################################################################################################################################################################################
 def getSF(mode='ele',yr=17):
     
+    plotDir = makeFolder('SF_%s_%s' %(mode, yr) )
+    print '\n\tplotDir:', plotDir
+#    sys.stdout = Logger(plotDir + 'SF_%s_%s' %(mode, yr) )
+
     if mode == 'ele':
         IDs = eleIDs
     if mode == 'mu':
@@ -258,25 +263,35 @@ def getSF(mode='ele',yr=17):
 
         procs = []
         for ID in IDs.keys()[n*bch:(n+1)*bch]:
-            proc = Process(target=computeSFs2D, args=(mode,ID,yr))
+            proc = Process(target=computeSFs2D, args=(mode,ID,yr,plotDir))
             procs.append(proc)
             proc.start()
 
         for proc in procs:
             proc.join()
+
+    sys.stderr = sys.__stderr__
+    sys.stdout = sys.__stdout__
 ##################################################################################################################################################################################################
 
 ##################################################################################################################################################################################################
 def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
- 
-    if mode == 'mu':  b_eta = b_eta_mu 
-    if mode == 'ele': b_eta = b_eta_ele 
-    cuts_all  = None
-    cuts_pass = None
-    eta_cut   = None
+
     fast = 'FullSim_'
     if FAST: 
        fast = 'FastSim_'
+
+    plotDir = makeFolder('EFF_%s_%s_%s' %(mode, fast, yr) )
+    print '\n\tplotDir:', plotDir
+    sys.stdout = Logger(plotDir + 'EFF_%s_%s_%s' %(mode, fast, yr) )
+
+    if mode == 'mu':  
+        b_eta = b_eta_mu; b_pt = b_pt_std
+    if mode == 'ele': 
+        b_eta = b_eta_ele_low; b_pt = b_pt_low
+    cuts_all  = None
+    cuts_pass = None
+    eta_cut   = None
 
     print'\n\tFastSim:', FAST
 
@@ -284,11 +299,12 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         if FAST == False: MODE = 'full'
         if FAST == True:  MODE = 'fast'
         inFile = glob(eos+'/ntuples/scalefactors/TnP_EGamma_trees_%s_%s/*.root'%(yr,MODE))[0] 
-        print '\n\tinDiri:', inFile
+        print '\n\tinDir:', inFile
         tFile = rt.TFile(inFile)
         tDir = tFile.Get('tnpEleIDs')
         t = tDir.Get('fitter_tree')
-        print '\n\tentries:', t.GetEntries()
+        entries = t.GetEntries()
+        print '\n\tentries:', entries 
         IDs = eleIDs
  
         cuts_all =  'tag_Ele_pt > 30 && abs(tag_sc_eta) < 2.17 && mcTrue == 1 && abs(mass - 91.19) < 30 && el_q * tag_Ele_q < 0' 
@@ -309,12 +325,14 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         if FAST == False: MODE = 'full'
         if FAST == True:  MODE = 'fast'
         inDir = eos+'/ntuples/scalefactors/TnP_Muon_trees_%s_%s/' %(yr,MODE)
-        print '\n\tinDiri:', inDir
+        if  yr == 18 and MODE == 'fast': inDir = eos+'/ntuples/scalefactors/TnP_Muon_trees_%s_%s_4Jun/' %(yr,MODE)
+        print '\n\tinDir:', inDir
         files = glob(inDir+'*.root')
         t = rt.TChain('Events')
         for f in files:
             t.Add(f)
-        print '\n\tentries:', t.GetEntries()
+        entries = t.GetEntries()
+        print '\n\tentries:', entries 
         IDs = muonIDs
  
         if FAST == False:
@@ -472,11 +490,14 @@ def makeEffs2D(mode='mu',FAST=True,RDF=True,yr=17):
         pf.showlumi(re.sub('Run201._','',ID + '_FastSim' if FAST else ID + '_FullSim'))
     #    c_eff.SetGridx(0)
         c_eff.Modified(); c_eff.Update()
-        save(c_eff, 'pt_eta', 'SUSY', mode, ID + '_FastSim' if FAST else ID + '_FullSim') 
+        save(c_eff, 'pt_eta', 'SUSY', mode, ID + '_FastSim' if FAST else ID + '_FullSim', DIR=plotDir) 
+
+    sys.stderr = sys.__stderr__
+    sys.stdout = sys.__stdout__
 ##################################################################################################################################################################################################
 
 ##################################################################################################################################################################################################
-def computeSFs2D(mode, ID, yr): 
+def computeSFs2D(mode, ID, yr, DIR): 
 
     if mode == 'ele':    
         if yr == 18:
@@ -507,7 +528,7 @@ def computeSFs2D(mode, ID, yr):
 #    pf.showlogo('CMS')
 #    c_sf.SetGridx(0)
     c_sf.Modified(); c_sf.Update()
-    save(c_sf, 'pt_eta', 'SUSY', mode, ID) 
+    save(c_sf, 'pt_eta', 'SUSY', mode, ID, DIR=DIR) 
 ##################################################################################################################################################################################################
 
 ##################################################################################################################################################################################################
@@ -539,7 +560,41 @@ def checkPU():
         pf.showlumi('truePU_'+mode+'_'+year)
         pf.showlogo('CMS')
         c.Modified(); c.Update()
-        save(c, 'truePU', 'SUSY', mode, year) 
+        save(c, 'truePU', 'SUSY', mode, year, DIR=plotDir) 
+##################################################################################################################################################################################################
+                                    #####  IDs  #####                           
+##################################################################################################################################################################################################
+def makeSFratios():
+
+    mode = 'ele' 
+
+    for ID in eleIDs.keys():
+
+        f_in_17 = rt.TFile(plotDir + 'final_ele_18_reDone/SUSY_%s_eff_pt_eta_%s_FastSim.root'%(mode,ID)).Get('eff')
+
+        ID = ID.replace('2017','2018')
+
+        f_in_18 = rt.TFile(plotDir + 'final_ele_18_fastSim18/SUSY_%s_eff_pt_eta_%s_FastSim.root'%(mode,ID)).Get('eff')
+
+        h_in_17 = f_in_17.GetPrimitive('eta_pass')
+        h_in_18 = f_in_18.GetPrimitive('eta_pass')
+
+        h_in_18.Divide(h_in_17)
+
+        c_sf = rt.TCanvas('CHECK','CHECK'); c_sf.cd()
+        if mode == 'mu':
+            h_in_18.SetTitle(';p_{T} [GeV]; |#eta|; FullSim/FastSim')
+            c_sf.SetLogx()
+        if mode == 'ele':
+            h_in_18.SetTitle(';super-cluster-#eta; p_{T} [GeV]; FullSim/FastSim')
+            c_sf.SetLogy()
+        h_in_18.SetAxisRange(0.8,1.2,'Z')
+        h_in_18.Draw('colztextE')
+        pf.showlumi('CHECK_Fast18/Fast17_'+re.sub('Run201._','',ID))
+    #    pf.showlogo('CMS')
+    #    c_sf.SetGridx(0)
+        c_sf.Modified(); c_sf.Update()
+        save(c_sf, 'pt_eta', 'SUSY', mode, ID, DIR=plotDir) 
 ##################################################################################################################################################################################################
                                     #####  IDs  #####                           
 ##################################################################################################################################################################################################
@@ -604,17 +659,35 @@ LeptonMVAVT_MediumPrompt       Lepton MVA VT + miniIso04       MediumPrompt ID
 ##################################################################################################################################################################################################
                                     ##### utilities #####                           
 ##################################################################################################################################################################################################
-def save(knvs, lbl_str, sample='', ch='', rmrk=''):
+def save(knvs, lbl_str, sample='', ch='', rmrk='', DIR=plotDir):
     knvs.GetFrame().SetLineWidth(0)
     knvs.Modified(); knvs.Update()
     if len(rmrk):
-        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}_{rmrk}.png' .format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str, rmrk=rmrk))
-        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}_{rmrk}.pdf' .format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str, rmrk=rmrk))
-        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}_{rmrk}.root'.format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str, rmrk=rmrk))
+        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}_{rmrk}.png' .format(Dir=DIR, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str, rmrk=rmrk))
+        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}_{rmrk}.pdf' .format(Dir=DIR, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str, rmrk=rmrk))
+        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}_{rmrk}.root'.format(Dir=DIR, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str, rmrk=rmrk))
     else:
-        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.png' .format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
-        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.pdf' .format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
-        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.root'.format(Dir=plotDir, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
+        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.png' .format(Dir=DIR, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
+        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.pdf' .format(Dir=DIR, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
+        knvs.SaveAs('{Dir}{smpl}_{ch}_{ttl}_{lbl}.root'.format(Dir=DIR, smpl=sample, ttl=knvs.GetTitle(), ch=ch, lbl=lbl_str))
 ##################################################################################################################################################################################################
 
 ##################################################################################################################################################################################################
+def makeFolder(name):
+
+    plotDir = eos+'plots/SF/'
+    today = datetime.now(); date = today.strftime('%y%m%d'); hour = str(today.hour); minit = str(today.minute)
+    plotDir = plotDir + name + '_' + date + '_' + hour + 'h_' + minit + 'm/'
+    os.mkdir(plotDir)
+    return plotDir
+##################################################################################################################################################################################################
+
+##################################################################################################################################################################################################
+class Logger(object):
+    def __init__(self, fileName):
+        self.terminal = sys.stdout
+        self.log = open(fileName+'.log', 'a')
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
